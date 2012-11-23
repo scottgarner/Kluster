@@ -1,0 +1,16 @@
+	body {
+		background: #333;
+	}
+	#kmeans {
+		background: #fff;
+	}
+	#dropBox {
+		background: #666;
+		height: 200px;
+		width: 400px;
+	}
+	#render {
+		background: #000;
+		width: 804px;
+		height: 400px;
+	}

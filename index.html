@@ -1,0 +1,165 @@
+<html>
+<head>
+
+	<link rel="stylesheet" type="text/css" href="css/screen.css"/>
+
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/three.min.js"></script>
+
+	<script type="text/javascript" src="js/functions.js"/></script>
+	
+	<script type="text/javascript" src="js/clusterScene.js"/></script>
+	<script type="text/javascript" src="js/clusterShaders.js"/></script>	
+
+	<script type="text/javascript">
+
+	var reader = new FileReader(); 
+
+	reader.onerror = function(e)  
+	{ 
+		alert('Error code: ' + e.target.error); 
+	}; 
+
+	reader.onload = function(e)
+	{
+		//console.log(e);
+		$('#dropBox').attr('src',e.target.result);
+	};
+
+	function stopDefault(e)  
+	{ 
+		e.stopPropagation(); 
+		e.preventDefault(); 
+	} 
+
+	function onDrop(e)  
+	{ 
+		e.stopPropagation(); 
+		e.preventDefault(); 
+
+		var readFileSize = 0; 
+		var files = e.originalEvent.dataTransfer.files; 
+
+		//console.log(files);
+
+		var file = files[0]; 
+		readFileSize += file.fileSize; 
+
+		var imageType = /image.*/; 
+
+		if (!file.type.match(imageType))  
+		{ 
+			return; 
+		} 
+
+		reader.readAsDataURL(file); 
+	} 
+
+
+	function drawKMeans() {
+
+		image = $('#dropBox')[0];
+
+		// Prepare canvas
+
+		console.log('Prepare canvas');
+
+		//$('#canvas').attr('width', image.width).attr('height', image.height);
+
+		context = $('#kmeans')[0].getContext('2d');
+		context.drawImage(image, 0, 0, image.width, image.height);
+
+		var imageData = context.getImageData(0, 0, image.width, image.height);
+		var data = imageData.data;
+
+
+		// Pixel Array
+
+		console.log('Canvas to pixel array');
+
+		var clusterCount = 12;
+		var pixelArray = [];
+
+		for(var i = 0; i < data.length; i += 4) {
+			pixelArray.push([data[i], data[i+1], data[i+2]]);
+		}
+
+		//console.log(pixelArray.length);
+
+		// Pick Centroids
+
+		console.log('Prepare Centroids');
+
+		var centroids = [];
+		for (var i = 0; i < clusterCount; i++)
+			centroids[i] = pixelArray[i * Math.floor(pixelArray.length / clusterCount)];
+
+		// KMeans
+
+		console.log('Kmeans');
+
+		groups = kmeans (pixelArray, centroids, clusterCount);
+
+		// Pixel array to canvas
+
+		console.log('Redraw canvas');
+
+		var k = 0;
+		for (var i = 0; i < groups.length; i++) {
+			currentGroup = groups[i];
+			//console.log(currentGroup);
+			currentGroup.sort(function(a,b) {
+				return rgb2hsv(a[0], a[1], a[2]).v - rgb2hsv(b[0], b[1], b[2]).v;
+			});
+
+			for (var j = 0; j < currentGroup.length; j++) {
+				currentPixel = currentGroup[j];
+
+				data[k++] = currentPixel[0];
+				data[k++] = currentPixel[1];
+				data[k++] = currentPixel[2];
+				data[k++] = 255;
+
+			}
+		}
+
+		context.putImageData(imageData, 0,0);
+
+		// 3D Scene
+
+		clusterScene.drawClusters(centroids,groups);
+
+	}
+
+
+	$("document").ready( function() { 
+
+
+		$('#dropBox').bind('dragenter', stopDefault); 
+		$('#dropBox').bind('dragover', stopDefault); 
+		$('#dropBox').bind('dragleave', stopDefault); 
+		$('#dropBox').bind('drop', onDrop); 
+
+
+		$('#dropBox').load(function() {
+			console.log("File loaded.")
+			drawKMeans();
+		})		
+
+		clusterScene.init();
+		clusterScene.animate();
+
+	} );
+
+
+
+
+
+	</script>
+</head>
+<body>
+	<img id="dropBox"/>
+	<canvas id="kmeans" width="400" height="200"></canvas>
+	<div id="render" width="800" height="400"></canvas>	
+</body>
+</html>
