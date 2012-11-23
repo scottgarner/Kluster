@@ -2,6 +2,7 @@
 
 var clusterScene = {
 	camera: null,
+	controls: null,
 	scene: null,
 	renderer: null,
 
@@ -11,12 +12,15 @@ var clusterScene = {
 
 	cameraStep: -1,
 
-	starTexture: THREE.ImageUtils.loadTexture( "textures/sprites/particle.png" ),
+	starTexture: THREE.ImageUtils.loadTexture( "textures/sprites/ball.png" ),
 
 	init: function () {
 
-		clusterScene.camera = new THREE.PerspectiveCamera( 24, $("#render").width() / $("#render").height(), 0.1, 5000 );
+		clusterScene.camera = new THREE.PerspectiveCamera( 35, $("#render").width() / $("#render").height(), 0.1, 5000 );
 		clusterScene.camera.position.z = 500;
+
+		clusterScene.controls = new THREE.OrbitControls( clusterScene.camera );
+		//clusterScene.controls.addEventListener( 'change', clusterScene.render );
 
 		clusterScene.scene = new THREE.Scene();
 
@@ -49,8 +53,8 @@ var clusterScene = {
 		var coreMaterial = new THREE.ParticleBasicMaterial( { 
 			size: 8,map: clusterScene.starTexture , 
 			depthTest: false,  blending: THREE.AdditiveBlending, 
-			transparent : true , opacity: .75} );
-		coreMaterial.color.setHSV( .65, .0, .8 );
+			transparent : true} );
+		coreMaterial.color.setHSV( .15, .1, .8 );
 
 		var coreParticles = new THREE.ParticleSystem( coreGeometry, coreMaterial );
 
@@ -82,7 +86,7 @@ var clusterScene = {
 			//console.log(centroid);
 
 			var groupWeight = group.length / pixelCount;
-			console.log(groupWeight);
+			//console.log(groupWeight);
 
 			var centroidObject = new THREE.Object3D();
 			//centroidObject.position.x = centroid[0] - 128;
@@ -92,7 +96,7 @@ var clusterScene = {
 			var centroidRGB = new THREE.Color();
 			centroidRGB.setRGB(centroid[0]/255,centroid[1]/255,centroid[2]/255);
 			var centroidLAB = centroidRGB.getLAB();
-			console.log(centroidLAB);
+			//console.log(centroidLAB);
 
 			centroidObject.position.y = (64-centroidLAB.l) ;
 			centroidObject.position.x = centroidLAB.a * 2;
@@ -176,15 +180,15 @@ var clusterScene = {
 
 	animate: function () {
 
-        // note: three.js includes requestAnimationFrame shim
         requestAnimationFrame( clusterScene.animate );
+        clusterScene.controls.update();
 
         clusterScene.universe.rotation.y += 0.001;
 
-        if (clusterScene.camera.position.z < 0 || clusterScene.camera.position.z > 500)
-        	clusterScene.cameraStep *= -1;
+     //    if (clusterScene.camera.position.z < 0 || clusterScene.camera.position.z > 500)
+     //    	clusterScene.cameraStep *= -1;
     	
-    	clusterScene.camera.position.z += clusterScene.cameraStep;
+    	// clusterScene.camera.position.z += clusterScene.cameraStep;
 
 
 		for ( var i = 0; i < clusterScene.universe.children.length; i ++ ) {
@@ -199,8 +203,12 @@ var clusterScene = {
 
 		}
 
+		clusterScene.render();
 
-        clusterScene.renderer.render( clusterScene.scene, clusterScene.camera );
+    },
+
+    render: function() {
+    	        clusterScene.renderer.render( clusterScene.scene, clusterScene.camera );
 
     }
 
