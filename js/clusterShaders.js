@@ -7,7 +7,7 @@ THREE.ShaderUtils.lib["cluster"] = {
 
     ] ),
     vertexShader: [
-        "uniform float size; ",
+        "attribute float size; ",
         "uniform float scale; ",
         "uniform float amount; ",
         "varying vec3 vColor;",
