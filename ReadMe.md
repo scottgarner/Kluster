@@ -1,9 +1,11 @@
 Kluster
 =======
 
-Kluster is an experiment/technology demo that uses [k-means clustering](http://en.wikipedia.org/wiki/K-means_clustering) to create a 3D star system using the pixels of an image.
+[Kluster](http://kluster.j38.net/) is an experiment/technology demo that uses [k-means clustering](http://en.wikipedia.org/wiki/K-means_clustering) to create a 3D star system using the pixels of an image.
 
 The inspiration to use k-means on image pixels came from a [post](http://0xfe.blogspot.com/2011/12/k-means-clustering-and-art.html) by [Mohit Muthanna](https://plus.google.com/u/0/111867441083313519234/about).
+
+[View it live](http://kluster.j38.net/).
 
 Technologies
 ------------

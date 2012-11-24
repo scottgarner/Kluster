@@ -79,7 +79,7 @@ var klusterEvents = {
         		break;
         	case "r".charCodeAt(0):
         		klusterGUI.clearCanvases();
-        		klusterScene.clearKlusters();
+        		klusterScene.clearClusters();
         		break;
 
         }

@@ -191,7 +191,7 @@ var klusterScene = {
 		klusterScene.startTime = Date.now();
 	},
 
-	clearclusters: function() {
+	clearClusters: function() {
 
 		for ( var i = 0; i < klusterScene.universe.children.length; i ++ ) {
 
