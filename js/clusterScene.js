@@ -1,6 +1,12 @@
+/**
+ * @author Scott Garner / http://scott.j38.net/
+ */
+
 "use strict";
 
 var clusterScene = {
+	startTime: Date.now(),
+
 	camera: null,
 	controls: null,
 	scene: null,
@@ -12,15 +18,16 @@ var clusterScene = {
 
 	cameraStep: -1,
 
-	starTexture: THREE.ImageUtils.loadTexture( "textures/sprites/ball.png" ),
+	starTexture: THREE.ImageUtils.loadTexture( "textures/sprites/particle.png" ),
+
+	clusterUniformsArray: [],
 
 	init: function () {
 
-		clusterScene.camera = new THREE.PerspectiveCamera( 35, $("#render").width() / $("#render").height(), 0.1, 5000 );
-		clusterScene.camera.position.z = 500;
+		clusterScene.camera = new THREE.PerspectiveCamera( 18, $("#render").width() / $("#render").height(), 0.1, 5000 );
+		clusterScene.camera.position.z = 400;
 
 		clusterScene.controls = new THREE.OrbitControls( clusterScene.camera );
-		//clusterScene.controls.addEventListener( 'change', clusterScene.render );
 
 		clusterScene.scene = new THREE.Scene();
 
@@ -29,10 +36,38 @@ var clusterScene = {
 
 		clusterScene.renderer = new THREE.WebGLRenderer();
 		clusterScene.renderer.setSize( $("#render").width() , $("#render").height() );
-		clusterScene.renderer.setClearColorHex( 0x000000, 1 );
+		clusterScene.renderer.setClearColorHex( 0x0e0d13, 1 );
+		clusterScene.renderer.autoClear = false;
 
+		// Post-processing
+
+		var shaderVignette = THREE.VignetteShader;
+
+		var renderModel = new THREE.RenderPass( clusterScene.scene, clusterScene.camera );
+		var effectFilm = new THREE.FilmPass( 0.65, 0.025, 648, false);
+		var effectVignette = new THREE.ShaderPass( shaderVignette );
+
+		effectVignette.uniforms[ "offset" ].value = 0.35;
+		effectVignette.uniforms[ "darkness" ].value = 2.5;	
+		effectVignette.renderToScreen = true;
+
+		clusterScene.composer = new THREE.EffectComposer( clusterScene.renderer );
+
+		clusterScene.composer.addPass( renderModel );
+		clusterScene.composer.addPass( effectFilm );
+		clusterScene.composer.addPass( effectVignette );
 
 		// Add stars
+
+		clusterScene.drawStars();
+
+		// Append canvas
+
+		$("#render").append( clusterScene.renderer.domElement );
+
+	},
+
+	drawStars: function() {
 
 		var coreGeometry = new THREE.Geometry();
 		
@@ -60,11 +95,6 @@ var clusterScene = {
 
 		clusterScene.universe.add(coreParticles);
 
-
-		// Append canvas
-
-		$("#render").append( clusterScene.renderer.domElement );
-
 	},
 
 	drawClusters: function (centroids,groups) {
@@ -83,60 +113,44 @@ var clusterScene = {
 
 			var centroid = centroids[i];
 			var group = groups[i];
-			//console.log(centroid);
-
 			var groupWeight = group.length / pixelCount;
-			//console.log(groupWeight);
 
 			var centroidObject = new THREE.Object3D();
-			//centroidObject.position.x = centroid[0] - 128;
-			//centroidObject.position.y = centroid[1] - 128;
-			//centroidObject.position.z = centroid[2] - 128;	
 
 			var centroidRGB = new THREE.Color();
 			centroidRGB.setRGB(centroid[0]/255,centroid[1]/255,centroid[2]/255);
 			var centroidLAB = centroidRGB.getLAB();
-			//console.log(centroidLAB);
 
-			centroidObject.position.y = (64-centroidLAB.l) ;
-			centroidObject.position.x = centroidLAB.a * 2;
-			centroidObject.position.z = centroidLAB.b * 2;	
+			centroidObject.position.z = (64-centroidLAB.l) ;
+			centroidObject.position.x = centroidLAB.a ;
+			centroidObject.position.y = centroidLAB.b ;		
 
-			//var centroidMaterial = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
-			//centroidMaterial.color.setRGB(centroid[0]/255,centroid[1]/255,centroid[2]/255);
+			// Cluster Shader 
 
-			//var centroidMesh = new THREE.Mesh( centroidGeometry, centroidMaterial );
-			// centroidMesh.position.x = centroid[0] - 128;
-			// centroidMesh.position.y = centroid[1] - 128;
-			// centroidMesh.position.z = centroid[2] - 128;
+			var clusterUniforms = THREE.UniformsUtils.clone( clusterShader.uniforms );
 
-			// centroidObject.add( centroidMesh);		
+			clusterScene.clusterUniformsArray.push(clusterUniforms);
 
-			// Shader 
+			clusterUniforms["map"].value = clusterScene.starTexture;
+			clusterUniforms["scale"].value = 100;
+			clusterUniforms["opacity"].value = 1.0;
+			clusterUniforms["time"].value = 0.0
 
-			var particleShader = THREE.ShaderUtils.lib["cluster"];
-			var particleUniforms = THREE.UniformsUtils.clone( particleShader.uniforms );
-
-			particleUniforms["map"].value = clusterScene.starTexture;
-			particleUniforms["scale"].value = 100;
-			particleUniforms["opacity"].value = .75;
-
-	        var particleAttributes = {
+	        var clusterAttributes = {
 	                size: { type: 'f', value: [] },
 	        };				
 
-	    	var groupColors = [];
-
-			// Geometry
+			// Cluster Geometry
 
 			var groupGeometry = new THREE.Geometry();
+			var groupColors = [];
 			groupGeometry.colors = groupColors;
 
-			// Populate
+			// Populate Geometry, Colors and Attributes
 
-			for ( var j = 0; j < group.length; j+=2 ) {
+			for ( var j = 0; j < group.length; j+=1 ) {
 
-				var radius = Math.random() * (256 * groupWeight);
+				var radius = Math.random() * (200 * groupWeight);
 				var longitude = Math.PI - (Math.random() * (2*Math.PI));
 				var latitude =  (Math.random() * Math.PI);
 
@@ -151,24 +165,23 @@ var clusterScene = {
 				pixelColor.setRGB( group[j][0]/255, group[j][1]/255, group[j][2]/255);	
 
 				groupColors.push(pixelColor)
-				particleAttributes.size.value.push(4.0 + Math.random() * 8.0);
+				clusterAttributes.size.value.push(4.0 + Math.random() * 8.0);
 
 			}
 
-			// Material 
+			// Cluster Material
 
 			var groupMaterial = new THREE.ShaderMaterial( {
-				uniforms: particleUniforms,
-				attributes: particleAttributes,
-				vertexShader: particleShader.vertexShader,
-				fragmentShader: particleShader.fragmentShader,
+				uniforms: clusterUniforms,
+				attributes: clusterAttributes,
+				vertexShader: clusterShader.vertexShader,
+				fragmentShader: clusterShader.fragmentShader,
 				vertexColors: true,
 				blending: THREE.AdditiveBlending, transparent:true,
 				depthTest: false
 			});				
 
-			//var groupMaterial = new THREE.ParticleBasicMaterial( { map: THREE.ImageUtils.loadTexture( "textures/sprites/particle.png"),size: 6, depthTest: false,  blending: THREE.AdditiveBlending, transparent : true, vertexColors: true } );
-			//console.log(groupMaterial);
+			// Cluster Mesh
 
 			var groupMesh = new THREE.ParticleSystem( groupGeometry, groupMaterial );			
 
@@ -176,40 +189,61 @@ var clusterScene = {
 			clusterScene.universe.add(centroidObject);
 
 		}
+
+		clusterScene.startTime = Date.now();
 	},
 
+	clearClusters: function() {
+
+		for ( var i = 0; i < clusterScene.universe.children.length; i ++ ) {
+
+			var object = clusterScene.universe.children[ i ];
+			if ( object instanceof THREE.Object3D && !(object instanceof THREE.ParticleSystem)) {
+
+				clusterScene.universe.remove(object);
+				i--;
+
+			}
+		}
+
+	},
 	animate: function () {
 
         requestAnimationFrame( clusterScene.animate );
         clusterScene.controls.update();
 
-        clusterScene.universe.rotation.y += 0.001;
+        // Update Uniforms
 
-     //    if (clusterScene.camera.position.z < 0 || clusterScene.camera.position.z > 500)
-     //    	clusterScene.cameraStep *= -1;
-    	
-    	// clusterScene.camera.position.z += clusterScene.cameraStep;
+        var time = Date.now() - clusterScene.startTime;
+        if (clusterScene.clusterUniformsArray[0]) {
+        	for (var i = 0; i < clusterScene.clusterUniformsArray.length; i++)
+        		clusterScene.clusterUniformsArray[i]["time"].value = time / 1000;
+        }
 
+    	// Rotate Clusters and Stars
+
+    	clusterScene.universe.rotation.y += 0.001;
 
 		for ( var i = 0; i < clusterScene.universe.children.length; i ++ ) {
 
 			var object = clusterScene.universe.children[ i ];
+			if ( object instanceof THREE.Object3D && !(object instanceof THREE.ParticleSystem)) {
 
-			if ( object instanceof THREE.Object3D ) {
-
-				object.rotation.y += 0.01;
+				object.rotation.y += 0.001;
 
 			}
-
 		}
 
-		clusterScene.render();
+		// Render scene
+
+		clusterScene.renderer.clear();
+		clusterScene.composer.render( 0.01 );
+		//clusterScene.render();
 
     },
 
     render: function() {
     	        clusterScene.renderer.render( clusterScene.scene, clusterScene.camera );
-
     }
 
 

@@ -1,26 +1,102 @@
-	body {
-		margin: 10px;
-		padding: 0;
-		background: #333;
-	}
-	#kmeans {
-		background: #fff;
-	}
-	#dropBox {
-		background: #666;
-		height: 200px;
-		width: 400px;
-	}
-	#render {
-		background: #000;
-		width: 804px;
-		height: 400px;
-	}
-	#webcam {
-		position: absolute;
-		top: 10px;
-		left: 10px;
-		width: 400px;
-		height: 200px;
-		display: none;
-	}
+
+body {
+	margin: 0;
+	background: #333;
+	color: #ccc;
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", helvetcia, sans-serif;
+	font-size: .8em;
+	background: url('../assets/dvsup.png');
+}
+
+h1 {
+
+	font-size: 1.2em;
+	font-weight: normal;
+}
+
+#main {
+	width: 800px;
+	margin: auto;
+	margin-top: 24px;
+	position: relative;
+
+}
+
+#content {
+
+	width: 800px;
+	height: 600px;
+	position: relative;
+	border: 1px solid #999;
+}
+
+#dropTarget {
+	position: absolute;
+	color: #ccc;
+	background: #666;
+	height:200px;
+	width:400px;		
+
+    display: -webkit-box;
+    -webkit-box-orient: horizontal;
+    -webkit-box-pack: center;
+    -webkit-box-align: center;
+   
+    display: -moz-box;
+    -moz-box-orient: horizontal;
+    -moz-box-pack: center;
+    -moz-box-align: center;
+    
+    display: box;
+    box-orient: horizontal;
+    box-pack: center;
+    box-align: center;		
+}
+#dropTarget p {
+	padding: 64px;
+	border-radius: 4px;
+	border: 2px dashed #ccc;
+	text-transform: uppercase;
+}
+#dropBox {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 200px;
+	width: 400px;
+}
+
+#kmeans {
+	position: absolute;
+	top:0;
+	left:400px;
+	background: #999;
+}	
+
+#render {
+	
+	position: absolute;
+	background: #000;
+	top: 200px;
+	width: 800px;
+	height: 400px;
+}
+
+#render.full{
+ 	position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+	width: 100%;
+	height: 100%;        
+    z-index: 999;
+
+}
+
+#webcam {
+	position: absolute;
+	width: 400px;
+	height: 200px;
+	display: none;
+}

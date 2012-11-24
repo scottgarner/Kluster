@@ -1,3 +1,9 @@
+/**
+ * @author Scott Garner / http://scott.j38.net/
+ */
+
+"use strict";
+
 var clusterGUI = {
 
 	localMediaStream: null,
@@ -14,25 +20,33 @@ var clusterGUI = {
 
 	},
 
-	drawKMeans: function() {
+	clearCanvases: function() {
 
-		image = $('#dropBox')[0];
+		var canvas;
+
+		canvas = $('#dropBox')[0];
+		canvas.getContext('2d').clearRect ( 0 , 0 , canvas.width, canvas.height );
+
+		canvas = $('#kmeans')[0];
+		canvas.getContext('2d').clearRect ( 0 , 0 , canvas.width, canvas.height );
+
+	},
+
+	drawKMeans: function() {
 
 		// Prepare canvas
 
 		console.log('Prepare canvas');
 
-		context = $('#kmeans')[0].getContext('2d');
-		context.drawImage(image, 0, 0, image.width, image.height);
-
-		var imageData = context.getImageData(0, 0, image.width, image.height);
+		var context = $('#dropBox')[0].getContext('2d');
+		var imageData = context.getImageData(0, 0, 400, 200);
 		var data = imageData.data;
 
 		// Pixel Array
 
 		console.log('Canvas to pixel array');
 
-		var clusterCount = 16;
+		var clusterCount = 12;
 		var pixelArray = [];
 
 		for(var i = 0; i < data.length; i += 4) {
@@ -51,23 +65,29 @@ var clusterGUI = {
 
 		console.log('Kmeans');
 
-		groups = kmeans (pixelArray, centroids, clusterCount);
+		clusterEvents.worker.postMessage({
+			'arrayToProcess': pixelArray,
+			'centroids':centroids, 
+			'clusters':clusterCount
+		});
 
-		// Pixel array to canvas
+	},
 
-		console.log('Redraw canvas');
+	drawGroups: function(workerData) {
+
+		var groups = workerData.groups;
+		var centroids = workerData.centroids;
+		
+		var context = $('#kmeans')[0].getContext('2d');	
+		var imageData = context.getImageData(0, 0, 400, 200);
+		var data = imageData.data;
 
 		var k = 0;
 		for (var i = 0; i < groups.length; i++) {
-			currentGroup = groups[i];
-			//console.log(currentGroup);
-			currentGroup.sort(function(a,b) {
-				return rgb2hsv(a[0], a[1], a[2]).v - rgb2hsv(b[0], b[1], b[2]).v;
-			});
+			var currentGroup = groups[i];
 
 			for (var j = 0; j < currentGroup.length; j++) {
-				currentPixel = currentGroup[j];
-
+				var currentPixel = currentGroup[j];
 				data[k++] = currentPixel[0];
 				data[k++] = currentPixel[1];
 				data[k++] = currentPixel[2];
@@ -76,9 +96,11 @@ var clusterGUI = {
 			}
 		}
 
+		// Draw to Canvas
+
 		context.putImageData(imageData, 0,0);
 
-		// 3D Scene
+		// Add to 3D Scene
 
 		clusterScene.drawClusters(centroids,groups);
 
@@ -100,6 +122,8 @@ var clusterGUI = {
 
 	takeVideoSnapshot: function() {
 
+		// http://www.html5rocks.com/en/tutorials/getusermedia/intro/
+
 		if (clusterGUI.localMediaStream != null) {
 
 			var context = $('#dropBox')[0].getContext('2d');
@@ -108,7 +132,6 @@ var clusterGUI = {
 			$("#webcam").hide();
 			
 			clusterGUI.drawKMeans();
-
 			clusterGUI.localMediaStream.stop();
 		}
 	}

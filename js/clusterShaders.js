@@ -1,22 +1,33 @@
-THREE.ShaderUtils.lib["cluster"] = {
+/**
+ * @author Scott Garner / http://scott.j38.net/
+ */
+
+ clusterShader = {
     uniforms: THREE.UniformsUtils.merge( [
         THREE.UniformsLib[ "particle" ],
         {
-            amount: { type: "f", value: 0.02 },
+            time: { type: "f", value: 0.0 },
         }
 
     ] ),
     vertexShader: [
         "attribute float size; ",
+        "uniform float time;",
         "uniform float scale; ",
         "uniform float amount; ",
         "varying vec3 vColor;",
 
         "void main() {",
-        "   vColor = color;",
-        "   vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );",
-        "   gl_PointSize = size * ( scale / length( mvPosition.xyz ) );",
-        "   gl_Position = projectionMatrix * mvPosition;",
+
+        "   vColor = color;",        
+        "   float amount = (time > size/2.0) ? 1.0 : time / (size/2.0);",
+
+        "   vec4 worldZero =  viewMatrix * vec4( 0,0,0,1.0);",
+        "   vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);",
+        "   vec4 lerpPosition = mix(worldZero, mvPosition, amount);",
+
+        "   gl_PointSize = size * ( scale / length( lerpPosition.xyz ) );",
+        "   gl_Position = projectionMatrix * lerpPosition;",
 
         "}",
     ].join("\n"),

@@ -1,43 +1,69 @@
+<!DOCTYPE html>
 <html>
-<head>
+	<head>
 
-	<link rel="stylesheet" type="text/css" href="css/screen.css"/>
+		<title>Cluster</title>
 
-	<script type="text/javascript" src="js/jquery.min.js"></script>
-	<script type="text/javascript" src="js/three.min.js"></script>
-	<script type="text/javascript" src="js/functions.js"/></script>
-	<script type="text/javascript" src="js/OrbitControls.js"/></script>
-	
-	<script type="text/javascript" src="js/clusterScene.js"/></script>
-	<script type="text/javascript" src="js/clusterShaders.js"/></script>
-	<script type="text/javascript" src="js/clusterEvents.js"/></script>
-	<script type="text/javascript" src="js/clusterGUI.js"/></script>	
+		<!-- Meta -->
 
-	<script type="text/javascript">
+		<meta charset="utf-8" />
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<meta name="description" content="An image visualization by Scott Garner" />
+		<meta name="author" content="Scott Garner" />
+		<meta name="keywords" content="WebGL, Three.js, Data Visualization" />
+		<meta name="copyright" content="Copyright 2012 Scott Garner" />		
 
+		<!-- Icon and Style -->
 
+		<link rel="stylesheet" type="text/css" href="css/screen.css"/>
 
-	$("document").ready( function() { 
-	
-		clusterEvents.init();
+		<!-- So much javascript -->
 
-		clusterScene.init();
-		clusterScene.animate();
+		<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script type="text/javascript" src="js/three.min.js"></script>
+		<script type="text/javascript" src="js/functions.js"/></script>
+		<script type="text/javascript" src="js/controls/OrbitControls.js"/></script>
 
-		clusterGUI.init();
+		<script type="text/javascript" src="js/shaders/CopyShader.js"></script>
+		<script type="text/javascript" src="js/shaders/FilmShader.js"></script>
+		<script type="text/javascript" src="js/shaders/VignetteShader.js"></script>	
 
-	} );
+		<script type="text/javascript" src="js/postprocessing/EffectComposer.js"></script>
+		<script type="text/javascript" src="js/postprocessing/MaskPass.js"></script>
+		<script type="text/javascript" src="js/postprocessing/RenderPass.js"></script>
+		<script type="text/javascript" src="js/postprocessing/ShaderPass.js"></script>
+		<script type="text/javascript" src="js/postprocessing/FilmPass.js"></script>	
+		
+		<script type="text/javascript" src="js/clusterScene.js"/></script>
+		<script type="text/javascript" src="js/clusterShaders.js"/></script>
+		<script type="text/javascript" src="js/clusterEvents.js"/></script>
+		<script type="text/javascript" src="js/clusterGUI.js"/></script>	
 
+		<!-- Document ready callback -->
 
+		<script type="text/javascript">
 
+			$("document").ready( function() { 
+				clusterEvents.init();
+				clusterGUI.init();
+				clusterScene.init();
+				clusterScene.animate();		
+			} );
 
-
-	</script>
-</head>
-<body>
-	<canvas id="dropBox" width="400" height="200"></canvas>
-	<canvas id="kmeans" width="400" height="200"></canvas>
-	<div id="render" width="800" height="400"></div>	
-	<video id="webcam" autoplay></video>
-</body>
+		</script>
+	</head>
+	<body>
+		<div id="main">
+			<h1>Cluster v001</h1>
+			<div id="content">
+				<div id="dropTarget">
+					<p>Drop Image Here</p>
+					<canvas id="dropBox" width="400" height="200"></canvas>
+				</div>
+				<canvas id="kmeans" width="400" height="200"></canvas>
+				<div id="render"></div>	
+				<video id="webcam" autoplay></video>
+			</div>
+		</div>
+	</body>
 </html>
