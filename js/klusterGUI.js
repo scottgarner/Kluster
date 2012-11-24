@@ -4,7 +4,7 @@
 
 "use strict";
 
-var clusterGUI = {
+var klusterGUI = {
 
 	localMediaStream: null,
 
@@ -36,15 +36,11 @@ var clusterGUI = {
 
 		// Prepare canvas
 
-		console.log('Prepare canvas');
-
 		var context = $('#dropBox')[0].getContext('2d');
 		var imageData = context.getImageData(0, 0, 400, 200);
 		var data = imageData.data;
 
 		// Pixel Array
-
-		console.log('Canvas to pixel array');
 
 		var clusterCount = 12;
 		var pixelArray = [];
@@ -55,17 +51,13 @@ var clusterGUI = {
 
 		// Pick Centroids
 
-		console.log('Prepare Centroids');
-
 		var centroids = [];
 		for (var i = 0; i < clusterCount; i++)
 			centroids[i] = pixelArray[i * Math.floor(pixelArray.length / clusterCount)];
 
 		// KMeans
 
-		console.log('Kmeans');
-
-		clusterEvents.worker.postMessage({
+		klusterEvents.worker.postMessage({
 			'arrayToProcess': pixelArray,
 			'centroids':centroids, 
 			'clusters':clusterCount
@@ -102,7 +94,7 @@ var clusterGUI = {
 
 		// Add to 3D Scene
 
-		clusterScene.drawClusters(centroids,groups);
+		klusterScene.drawClusters(centroids,groups);
 
 	},
 
@@ -112,7 +104,7 @@ var clusterGUI = {
 
 		navigator.getUserMedia({video: true},
 			function(stream) {
-				clusterGUI.localMediaStream = stream;
+				klusterGUI.localMediaStream = stream;
 				$("#webcam")[0].src = window.URL.createObjectURL(stream);
 
 				$("#webcam").show();
@@ -124,15 +116,15 @@ var clusterGUI = {
 
 		// http://www.html5rocks.com/en/tutorials/getusermedia/intro/
 
-		if (clusterGUI.localMediaStream != null) {
+		if (klusterGUI.localMediaStream != null) {
 
 			var context = $('#dropBox')[0].getContext('2d');
 			context.drawImage($("#webcam")[0], 0, 0, 400, 200);
 			
 			$("#webcam").hide();
 			
-			clusterGUI.drawKMeans();
-			clusterGUI.localMediaStream.stop();
+			klusterGUI.drawKMeans();
+			klusterGUI.localMediaStream.stop();
 		}
 	}
 }
