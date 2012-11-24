@@ -42,7 +42,7 @@ var klusterGUI = {
 
 		// Pixel Array
 
-		var clusterCount = 12;
+		var clusterCount = 16;
 		var pixelArray = [];
 
 		for(var i = 0; i < data.length; i += 4) {

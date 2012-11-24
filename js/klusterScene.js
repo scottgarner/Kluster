@@ -36,7 +36,7 @@ var klusterScene = {
 
 		klusterScene.renderer = new THREE.WebGLRenderer();
 		klusterScene.renderer.setSize( $("#render").width() , $("#render").height() );
-		klusterScene.renderer.setClearColorHex( 0x0e0d13, 1 );
+		klusterScene.renderer.setClearColorHex( 0x0a090d, 1 );
 		klusterScene.renderer.autoClear = false;
 
 		// Post-processing
@@ -56,6 +56,32 @@ var klusterScene = {
 		klusterScene.composer.addPass( renderModel );
 		klusterScene.composer.addPass( effectFilm );
 		klusterScene.composer.addPass( effectVignette );
+
+		// Add environment
+
+		// var r = "textures/cube/skybox/";
+		// var urls = [ r + "px.jpg", r + "nx.jpg",
+		// 			 r + "py.jpg", r + "ny.jpg",
+		// 			 r + "pz.jpg", r + "nz.jpg" ];
+
+		// var textureCube = THREE.ImageUtils.loadTextureCube( urls );
+		// textureCube.format = THREE.RGBFormat;
+
+		// var shader = THREE.ShaderUtils.lib[ "cube" ];
+		// shader.uniforms[ "tCube" ].value = textureCube;
+
+		// var material = new THREE.ShaderMaterial( {
+
+		// 	fragmentShader: shader.fragmentShader,
+		// 	vertexShader: shader.vertexShader,
+		// 	uniforms: shader.uniforms,
+		// 	depthWrite: false,
+		// 	side: THREE.BackSide
+
+		// } );
+
+		// var mesh = new THREE.Mesh( new THREE.CubeGeometry( 500, 500, 500 ), material );
+		// klusterScene.scene.add( mesh );		
 
 		// Add stars
 
@@ -115,9 +141,9 @@ var klusterScene = {
 
 			var centroidObject = new THREE.Object3D();
 
-			var centroidRGB = new THREE.Color();
-			centroidRGB.setRGB(centroid[0]/255,centroid[1]/255,centroid[2]/255);
-			var centroidLAB = centroidRGB.getLAB();
+			var centroidColor = new THREE.Color();
+			centroidColor.setRGB(centroid[0]/255,centroid[1]/255,centroid[2]/255);
+			var centroidLAB = centroidColor.getLAB();
 
 			centroidObject.position.z = (64-centroidLAB.l) ;
 			centroidObject.position.x = centroidLAB.a ;
@@ -131,7 +157,7 @@ var klusterScene = {
 
 			clusterUniforms["map"].value = klusterScene.starTexture;
 			clusterUniforms["scale"].value = 100;
-			clusterUniforms["opacity"].value = 1.0;
+			clusterUniforms["opacity"].value = .85;
 			clusterUniforms["time"].value = 0.0
 
 	        var clusterAttributes = {
@@ -148,7 +174,14 @@ var klusterScene = {
 
 			for ( var j = 0; j < group.length; j+=1 ) {
 
-				var radius = Math.random() * (200 * groupWeight);
+				var pixelColor = new THREE.Color( 0xffffff );
+				pixelColor.setRGB( group[j][0]/255, group[j][1]/255, group[j][2]/255);
+
+				var distance = new THREE.Vector3(pixelColor.r,pixelColor.g,pixelColor.b).
+					distanceTo(new THREE.Vector3(centroidColor.r,centroidColor.g,centroidColor.b));
+
+				//var radius = Math.random()  * (200 * groupWeight);
+				var radius = (distance  * 50 * (groupWeight * 10));
 				var longitude = Math.PI - (Math.random() * (2*Math.PI));
 				var latitude =  (Math.random() * Math.PI);
 
@@ -159,11 +192,8 @@ var klusterScene = {
 				var vector = new THREE.Vector3( x, y, z );
 				groupGeometry.vertices.push( vector );	
 
-				var pixelColor = new THREE.Color( 0xffffff );
-				pixelColor.setRGB( group[j][0]/255, group[j][1]/255, group[j][2]/255);	
-
 				groupColors.push(pixelColor)
-				clusterAttributes.size.value.push(4.0 + Math.random() * 8.0);
+				clusterAttributes.size.value.push(2.0 + Math.random() * 8.0);
 
 			}
 
