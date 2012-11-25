@@ -5,9 +5,8 @@
 "use strict";
 
 self.onmessage = function(e) {
-	
-	var groups = kmeans ( e.data.arrayToProcess, e.data.centroids, e.data.clusters);
 
+	var groups = kmeans ( e.data.arrayToProcess, e.data.centroids, e.data.clusters);
 	self.postMessage(groups);
 };
 
@@ -91,23 +90,22 @@ function kmeans( arrayToProcess, centroids, clusters )
 
 			for( var i=0; i < centroids[clustersloop].length; i++ )
 			{
-
+				if (groups[clustersloop].length == 0) continue;
+				
 				centroids[clustersloop][i]=( centroids[clustersloop][i]/groups[clustersloop].length );
 
 				if ( centroids[clustersloop][i]!=oldcentroids[clustersloop][i] )
 				{
 
-					changed=true;
-					oldcentroids=centroids;
+					if (loopCount++ < 100) {
+						changed=true;
+						oldcentroids=centroids;
+					} 
 
 				}
 
 			}
 
-		}
-
-		if (loopCount++ > 10) {
-			changed = false;
 		}
 
 	}

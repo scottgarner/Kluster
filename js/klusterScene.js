@@ -112,10 +112,10 @@ var klusterScene = {
 		}	
 		
 		var coreMaterial = new THREE.ParticleBasicMaterial( { 
-			size: 4,map: klusterScene.starTexture , 
+			size: 3.0,map: klusterScene.starTexture , 
 			depthTest: false,  blending: THREE.AdditiveBlending, 
 			transparent : true} );
-		coreMaterial.color.setHSV( .15, .1, .8 );
+		coreMaterial.color.setHSV( .15, .1, 1.0 );
 
 		var coreParticles = new THREE.ParticleSystem( coreGeometry, coreMaterial );
 
@@ -137,6 +137,9 @@ var klusterScene = {
 
 			var centroid = centroids[i];
 			var group = groups[i];
+
+			if (group.length == 0) continue;
+
 			var groupWeight = group.length / pixelCount;
 
 			var centroidObject = new THREE.Object3D();
@@ -145,9 +148,9 @@ var klusterScene = {
 			centroidColor.setRGB(centroid[0]/255,centroid[1]/255,centroid[2]/255);
 			var centroidLAB = centroidColor.getLAB();
 
-			centroidObject.position.z = (64-centroidLAB.l) ;
-			centroidObject.position.x = centroidLAB.a ;
-			centroidObject.position.y = centroidLAB.b ;		
+			centroidObject.position.y = (64-centroidLAB.l) /3;
+			centroidObject.position.x = centroidLAB.a /3;
+			centroidObject.position.z = centroidLAB.b /3;		
 
 			// cluster Shader 
 
@@ -157,11 +160,12 @@ var klusterScene = {
 
 			clusterUniforms["map"].value = klusterScene.starTexture;
 			clusterUniforms["scale"].value = 100;
-			clusterUniforms["opacity"].value = .85;
+			clusterUniforms["opacity"].value = .75;
 			clusterUniforms["time"].value = 0.0
 
 	        var clusterAttributes = {
 	                size: { type: 'f', value: [] },
+	                offset: { type: 'v3', value: []}
 	        };				
 
 			// cluster Geometry
@@ -180,8 +184,8 @@ var klusterScene = {
 				var distance = new THREE.Vector3(pixelColor.r,pixelColor.g,pixelColor.b).
 					distanceTo(new THREE.Vector3(centroidColor.r,centroidColor.g,centroidColor.b));
 
-				//var radius = Math.random()  * (200 * groupWeight);
-				var radius = (distance  * 50 * (groupWeight * 10));
+				var radius = Math.random()  * (200 * groupWeight);
+				//var radius = (distance  * 100 * (groupWeight * 10));
 				var longitude = Math.PI - (Math.random() * (2*Math.PI));
 				var latitude =  (Math.random() * Math.PI);
 
@@ -190,10 +194,11 @@ var klusterScene = {
 				var y = radius * Math.cos(latitude) ; 
 
 				var vector = new THREE.Vector3( x, y, z );
-				groupGeometry.vertices.push( vector );	
+				groupGeometry.vertices.push( centroidObject.position );	
 
 				groupColors.push(pixelColor)
-				clusterAttributes.size.value.push(2.0 + Math.random() * 8.0);
+				clusterAttributes.size.value.push(8.0 + Math.random() * 8.0);
+				clusterAttributes.offset.value.push(new THREE.Vector3( x, y, z ));
 
 			}
 
@@ -252,15 +257,15 @@ var klusterScene = {
 
     	klusterScene.universe.rotation.y += 0.001;
 
-		for ( var i = 0; i < klusterScene.universe.children.length; i ++ ) {
+		// for ( var i = 0; i < klusterScene.universe.children.length; i ++ ) {
 
-			var object = klusterScene.universe.children[ i ];
-			if ( object instanceof THREE.Object3D && !(object instanceof THREE.ParticleSystem)) {
+		// 	var object = klusterScene.universe.children[ i ];
+		// 	if ( object instanceof THREE.Object3D && !(object instanceof THREE.ParticleSystem)) {
 
-				object.rotation.y += 0.001;
+		// 		object.rotation.y += 0.001;
 
-			}
-		}
+		// 	}
+		// }
 
 		// Render scene
 
