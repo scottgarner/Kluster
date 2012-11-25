@@ -14,7 +14,7 @@
 		<meta name="copyright" content="Copyright 2012 Scott Garner" />		
 
 		<!-- Icon and Style -->
-
+		<link rel="icon" type="image/png" href="assets/favicon.png" />
 		<link rel="stylesheet" type="text/css" href="css/screen.css"/>
 
 		<!-- So much javascript -->
@@ -39,31 +39,59 @@
 		<script type="text/javascript" src="js/klusterEvents.js"/></script>
 		<script type="text/javascript" src="js/klusterGUI.js"/></script>	
 
+		<script type="text/javascript" src="js/modernizr.min.js"></script>
+
 		<!-- Document ready callback -->
 
 		<script type="text/javascript">
 
+
 			$("document").ready( function() { 
-				klusterEvents.init();
-				klusterGUI.init();
-				klusterScene.init();
-				klusterScene.animate();		
+
+				if (Modernizr.webgl && Modernizr.filereader &&
+					Modernizr.draganddrop && Modernizr.webworkers) {
+
+					klusterEvents.init();
+					klusterGUI.init();
+					klusterScene.init();
+					klusterScene.animate();		
+
+				} else  {
+					$("#main").hide();
+					$("#error").show();
+				}
 			} );
 
 		</script>
 	</head>
 	<body>
 		<div id="main">
-			<h1>Kluster v001</h1>
-			<div id="content">
-				<div id="dropTarget">
-					<p>Drop Image Here</p>
-					<canvas id="dropBox" width="400" height="200"></canvas>
+			<div id="ui">
+				<h1>Kluster</h1>
+				<div id="images">
+					<label>Original Image</label>
+					<div class="image"><canvas id="original" width="300" height="300">/></div>
+					<label>K-Means Palette</label>
+					<div class="image"><canvas id="kmeans" width="300" height="300"/></div>
+					<label>Controls</label>
+					<div id="reset" class="button">Reset</div>
+					<div id="expand" class="button">Expand</div>
+					<div id="about" class="button">About</div>
 				</div>
-				<canvas id="kmeans" width="400" height="200"></canvas>
-				<div id="render"></div>	
+				<div id="footer">
+					Scott Made This
+				</div>
 				<video id="webcam" autoplay></video>
 			</div>
+
+			<div id="render">
+				<div id="welcome">Drag and drop and image to begin</div>
+
+			</div>
+		</div>
+		<div id="error">
+			Your browser doesn't support a feature required by Kluster. <br/>
+			Try the lateset version of <a href="http://google.com/chrome/">Chrome</a> to enjoy all the full experience.	
 		</div>
 	</body>
 </html>

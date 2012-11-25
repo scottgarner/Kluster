@@ -7,6 +7,9 @@
 var klusterScene = {
 	startTime: Date.now(),
 
+	renderWidth: $("#render").width(),
+	renderHeight: $("#render").height(),	
+
 	camera: null,
 	controls: null,
 	scene: null,
@@ -24,7 +27,10 @@ var klusterScene = {
 
 	init: function () {
 
-		klusterScene.camera = new THREE.PerspectiveCamera( 24, $("#render").width() / $("#render").height(), 0.1, 5000 );
+		klusterScene.renderWidth = $("#render").width();
+		klusterScene.renderHeight = $("#render").height();		
+
+		klusterScene.camera = new THREE.PerspectiveCamera( 24, klusterScene.renderWidth / klusterScene.renderHeight, 0.1, 5000 );
 		klusterScene.camera.position.z = 200;
 
 		klusterScene.controls = new THREE.OrbitControls( klusterScene.camera );
@@ -35,8 +41,8 @@ var klusterScene = {
 		klusterScene.scene.add( klusterScene.universe );
 
 		klusterScene.renderer = new THREE.WebGLRenderer();
-		klusterScene.renderer.setSize( $("#render").width() , $("#render").height() );
-		klusterScene.renderer.setClearColorHex( 0x0a090d, 1 );
+		klusterScene.renderer.setSize( klusterScene.renderWidth, klusterScene.renderHeight );
+		klusterScene.renderer.setClearColorHex( 0x0b090f, 1 );
 		klusterScene.renderer.autoClear = false;
 
 		// Post-processing
@@ -44,7 +50,7 @@ var klusterScene = {
 		var shaderVignette = THREE.VignetteShader;
 
 		var renderModel = new THREE.RenderPass( klusterScene.scene, klusterScene.camera );
-		var effectFilm = new THREE.FilmPass( 0.65, 0.025, 648, false);
+		var effectFilm = new THREE.FilmPass( 0.25, 0.025, 648, false);
 		var effectVignette = new THREE.ShaderPass( shaderVignette );
 
 		effectVignette.uniforms[ "offset" ].value = 0.35;

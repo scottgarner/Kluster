@@ -13,15 +13,25 @@ var klusterEvents = {
 
 		// Bind Events
 
-		$(document).bind('keypress', klusterEvents.keyPress);
+		$(document).bind('keyup', klusterEvents.keyUp);
 		$(window).bind('resize', klusterEvents.resize);
 
-		$('#content').bind('dragenter', klusterEvents.ignoreEvent); 
-		$('#content').bind('dragover', klusterEvents.ignoreEvent); 
-		$('#content').bind('dragleave', klusterEvents.ignoreEvent); 
-		$('#content').bind('drop', klusterEvents.dropImage); 
+		$('#main').bind('dragenter', klusterEvents.ignoreEvent); 
+		$('#main').bind('dragover', klusterEvents.ignoreEvent); 
+		$('#main').bind('dragleave', klusterEvents.ignoreEvent); 
+		$('#main').bind('drop', klusterEvents.dropImage); 
 
-		$('#render').bind('drop', klusterEvents.dropImage);
+		// Buttons
+
+		$('#reset').click(function(){
+			klusterGUI.clearCanvases();
+			klusterScene.clearClusters();
+		});
+		$('#expand').click(function( ){
+			$('#render').toggleClass('full');
+        	klusterEvents.resize();
+		});
+		$('#about').click(function( ){});
 
 		// Setup file reader
 
@@ -29,13 +39,7 @@ var klusterEvents = {
 
 		klusterEvents.reader.onload = function(e)
 		{
-			$("<img/>").attr('src',e.target.result).load(function() {
-
-				var context = $('#dropBox')[0].getContext('2d');
-				context.drawImage(this, 0, 0, 400, 200);
-				
-				klusterGUI.drawKMeans();
-			})	
+			klusterGUI.drawOriginal(e.target.result);
 		};
 
 		// Setup worker thread
@@ -55,29 +59,37 @@ var klusterEvents = {
 
 	resize: function(e) {
 
-			klusterScene.camera.aspect = $("#render").width() / $("#render").height()
+			klusterScene.renderWidth = $("#render").width();
+			klusterScene.renderHeight = $("#render").height();
+
+			klusterScene.camera.aspect = klusterScene.renderWidth / klusterScene.renderHeight;
 			klusterScene.camera.updateProjectionMatrix();
 
-			klusterScene.renderer.setSize( $("#render").width() , $("#render").height());
+			klusterScene.renderer.setSize( klusterScene.renderWidth , klusterScene.renderHeight);
 
 			klusterScene.composer.reset();
 
 	},
 
-	keyPress: function(e) {
-
-        switch (e.which){
-        	case "v".charCodeAt(0):
-        		klusterGUI.showVideoChooser();
+	keyUp: function(e) {
+		switch (e.keyCode) {	
+			case 27:
+				$('#render').removeClass('full');
+				klusterEvents.resize();
+				break;
+        	case "V".charCodeAt(0):
+        		if(Modernizr.getusermedia)
+					klusterGUI.showVideoChooser();
         		break;
-        	case "s".charCodeAt(0):
-        		klusterGUI.takeVideoSnapshot();
+        	case "S".charCodeAt(0):
+        		if(Modernizr.getusermedia)
+        			klusterGUI.takeVideoSnapshot();
         		break;
-        	case "f".charCodeAt(0):
+        	case "E".charCodeAt(0):
         		$('#render').toggleClass('full');
         		klusterEvents.resize();
         		break;
-        	case "r".charCodeAt(0):
+        	case "R".charCodeAt(0):
         		klusterGUI.clearCanvases();
         		klusterScene.clearClusters();
         		break;
@@ -101,6 +113,8 @@ var klusterEvents = {
 		{ 
 			return; 
 		} 
+
+		$('#welcome').hide();
 
 		klusterEvents.reader.readAsDataURL(file); 
 	},

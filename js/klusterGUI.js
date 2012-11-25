@@ -24,7 +24,7 @@ var klusterGUI = {
 
 		var canvas;
 
-		canvas = $('#dropBox')[0];
+		canvas = $('#original')[0];
 		canvas.getContext('2d').clearRect ( 0 , 0 , canvas.width, canvas.height );
 
 		canvas = $('#kmeans')[0];
@@ -32,12 +32,27 @@ var klusterGUI = {
 
 	},
 
-	drawKMeans: function() {
+	drawOriginal: function(imageData) {
+
+			$("<img/>").attr('src',imageData).load(function() {
+				var aspect = this.width / this.height;
+				console.log($('#original').width() );
+				var context = $('#original')[0].getContext('2d');
+				context.drawImage(this, 0, 0, $('#original')[0].width, $('#original')[0].height);
+
+				$('#original').css('width',$('#original').height()* aspect);
+				$('#original').css('left', - $('#original').width() / 2);
+				
+				klusterGUI.calculateKMeans();
+			})			
+	},
+
+	calculateKMeans: function() {
 
 		// Prepare canvas
 
-		var context = $('#dropBox')[0].getContext('2d');
-		var imageData = context.getImageData(0, 0, 400, 200);
+		var context = $('#original')[0].getContext('2d');
+		var imageData = context.getImageData(0, 0, $('#original')[0].width, $('#original')[0].width);
 		var data = imageData.data;
 
 		// Pixel Array
@@ -71,7 +86,7 @@ var klusterGUI = {
 		var centroids = workerData.centroids;
 		
 		var context = $('#kmeans')[0].getContext('2d');	
-		var imageData = context.getImageData(0, 0, 400, 200);
+		var imageData = context.getImageData(0, 0, $('#kmeans')[0].width, $('#kmeans')[0].width);
 		var data = imageData.data;
 
 		var k = 0;
@@ -92,6 +107,9 @@ var klusterGUI = {
 
 		context.putImageData(imageData, 0,0);
 
+		$('#kmeans').css('width',$('#original').width());
+		$('#kmeans').css('left', parseInt($('#original').css('left')));
+		r
 		// Add to 3D Scene
 
 		klusterScene.drawClusters(centroids,groups);
@@ -118,12 +136,12 @@ var klusterGUI = {
 
 		if (klusterGUI.localMediaStream != null) {
 
-			var context = $('#dropBox')[0].getContext('2d');
+			var context = $('#original')[0].getContext('2d');
 			context.drawImage($("#webcam")[0], 0, 0, 400, 200);
 			
 			$("#webcam").hide();
 			
-			klusterGUI.drawKMeans();
+			klusterGUI.calculateKMeans();
 			klusterGUI.localMediaStream.stop();
 		}
 	}
