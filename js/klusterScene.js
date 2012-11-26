@@ -42,7 +42,7 @@ var klusterScene = {
 
 		klusterScene.renderer = new THREE.WebGLRenderer();
 		klusterScene.renderer.setSize( klusterScene.renderWidth, klusterScene.renderHeight );
-		klusterScene.renderer.setClearColorHex( 0x121317, 1 );
+		klusterScene.renderer.setClearColorHex( 0x0c0d10, 1 );
 		klusterScene.renderer.autoClear = false;
 		//klusterScene.renderer.preserveDrawingBuffer  = true;
 
@@ -54,8 +54,8 @@ var klusterScene = {
 		var effectFilm = new THREE.FilmPass( 0.25, 0.025, 648, false);
 		var effectVignette = new THREE.ShaderPass( shaderVignette );
 
-		effectVignette.uniforms[ "offset" ].value = 0.35;
-		effectVignette.uniforms[ "darkness" ].value = 2.5;	
+		effectVignette.uniforms[ "offset" ].value = 0.55;
+		effectVignette.uniforms[ "darkness" ].value = 1.25;	
 		effectVignette.renderToScreen = true;
 
 		klusterScene.composer = new THREE.EffectComposer( klusterScene.renderer );
@@ -102,27 +102,38 @@ var klusterScene = {
 
 	drawStars: function() {
 
+		var starColors = [];
 		var coreGeometry = new THREE.Geometry();
+		coreGeometry.colors = starColors;
 		
-		for (var i = 0; i < 2400; i++) {
+		for (var i = 0; i < 4000; i++) {
 		
-				var radius = Math.random() * 128;
-				var longitude = Math.PI - (Math.random() * (2*Math.PI));
-				var latitude =  (Math.random() * Math.PI);
-				
-				var x = radius * Math.cos(longitude) * Math.sin(latitude);
-				var z = radius * Math.sin(longitude) * Math.sin(latitude);
-				var y = radius * Math.cos(latitude); 	
+			// var radius = Math.random() * 100;
+			// var longitude = Math.PI - (Math.random() * (2*Math.PI));
+			// var latitude =  (Math.random() * Math.PI);
+			
+			// var x = radius * Math.cos(longitude) * Math.sin(latitude);
+			// var z = radius * Math.sin(longitude) * Math.sin(latitude);
+			// var y = radius * Math.cos(latitude); 	
 
-			coreGeometry.vertices.push( new THREE.Vector3( x, y, z ) );				
+			var x = 120 - Math.random() * 240;
+			var y = 120 - Math.random() * 240;
+			var z = 120 - Math.random() * 240;
+
+			coreGeometry.vertices.push( new THREE.Vector3( x, y, z ) );
+			var starColor = new THREE.Color(0xffffff);
+			starColor.setRGB(
+				.8 + Math.random() * .2,
+				.8 + Math.random() * .2,
+				.8 + Math.random() * .2);
+			starColors.push(starColor)				
 		
 		}	
 		
 		var coreMaterial = new THREE.ParticleBasicMaterial( { 
 			size: 2.0,map: klusterScene.starTexture , 
 			depthTest: false,  blending: THREE.AdditiveBlending, 
-			transparent : true} );
-		coreMaterial.color.setHSV( .15, .1, 1.0 );
+			transparent : true, vertexColors: true} );
 
 		var coreParticles = new THREE.ParticleSystem( coreGeometry, coreMaterial );
 
