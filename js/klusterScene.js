@@ -104,9 +104,9 @@ var klusterScene = {
 			// var z = radius * Math.sin(longitude) * Math.sin(latitude);
 			// var y = radius * Math.cos(latitude); 	
 
-			var x = 100 - Math.random() * 200;
-			var y = 100 - Math.random() * 200;
-			var z = 100 - Math.random() * 200;
+			var x = 120 - Math.random() * 240;
+			var y = 120 - Math.random() * 240;
+			var z = 120 - Math.random() * 240;
 
 			coreGeometry.vertices.push( new THREE.Vector3( x, y, z ) );
 			var starColor = new THREE.Color(0xffffff);
