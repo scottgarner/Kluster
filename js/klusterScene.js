@@ -42,8 +42,9 @@ var klusterScene = {
 
 		klusterScene.renderer = new THREE.WebGLRenderer();
 		klusterScene.renderer.setSize( klusterScene.renderWidth, klusterScene.renderHeight );
-		klusterScene.renderer.setClearColorHex( 0x0b090f, 1 );
+		klusterScene.renderer.setClearColorHex( 0x121317, 1 );
 		klusterScene.renderer.autoClear = false;
+		//klusterScene.renderer.preserveDrawingBuffer  = true;
 
 		// Post-processing
 
@@ -266,6 +267,19 @@ var klusterScene = {
 
     render: function() {
     	klusterScene.renderer.render( klusterScene.scene, klusterScene.camera );
+    },
+
+    saveImage: function() {
+		klusterScene.renderer.clear();
+		klusterScene.composer.render( 0.01 );
+
+		var dataURL= klusterScene.renderer.domElement.toDataURL();
+		var saveWindow = window.open("about:blank", "Kluster Image", "width="+klusterScene.renderer.domElement.width+", height="+klusterScene.renderer.domElement.height);
+		var saveImage = saveWindow.document.createElement( 'img' );
+		saveImage.src = dataURL;
+		$(saveWindow.document.body).css({'margin':0, 'padding':0});
+		saveWindow.document.body.appendChild( saveImage );		
+
     }
 
 

@@ -31,6 +31,9 @@ var klusterEvents = {
 			$('#render').toggleClass('full');
         	klusterEvents.resize();
 		});
+		$('#save').click(function( ){
+			klusterScene.saveImage();
+		});		
 		$('#about').click(function( ){});
 
 		// Setup file reader
@@ -81,9 +84,12 @@ var klusterEvents = {
         		if(Modernizr.getusermedia)
 					klusterGUI.showVideoChooser();
         		break;
-        	case "S".charCodeAt(0):
+        	case "G".charCodeAt(0):
         		if(Modernizr.getusermedia)
         			klusterGUI.takeVideoSnapshot();
+        		break;
+        	case "S".charCodeAt(0):
+        		klusterScene.saveImage();
         		break;
         	case "E".charCodeAt(0):
         		$('#render').toggleClass('full');
