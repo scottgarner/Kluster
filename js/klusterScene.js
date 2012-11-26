@@ -31,9 +31,12 @@ var klusterScene = {
 		klusterScene.renderHeight = $("#render").height();		
 
 		klusterScene.camera = new THREE.PerspectiveCamera( 24, klusterScene.renderWidth / klusterScene.renderHeight, 0.1, 5000 );
-		klusterScene.camera.position.z = 200;
+		klusterScene.camera.position.z = 120;
 
 		klusterScene.controls = new THREE.OrbitControls( klusterScene.camera );
+		klusterScene.controls.maxDistance = 200;
+		klusterScene.controls.minPolarAngle = Math.PI * .2;
+		klusterScene.controls.maxPolarAngle = Math.PI * .8;
 
 		klusterScene.scene = new THREE.Scene();
 
@@ -44,7 +47,6 @@ var klusterScene = {
 		klusterScene.renderer.setSize( klusterScene.renderWidth, klusterScene.renderHeight );
 		klusterScene.renderer.setClearColorHex( 0x0c0d10, 1 );
 		klusterScene.renderer.autoClear = false;
-		//klusterScene.renderer.preserveDrawingBuffer  = true;
 
 		// Post-processing
 
@@ -66,29 +68,15 @@ var klusterScene = {
 
 		// Add environment
 
-		// var r = "textures/cube/skybox/";
-		// var urls = [ r + "px.jpg", r + "nx.jpg",
-		// 			 r + "py.jpg", r + "ny.jpg",
-		// 			 r + "pz.jpg", r + "nz.jpg" ];
+		var skyTexture = THREE.ImageUtils.loadTexture( 'textures/stars.jpg', new THREE.UVMapping());
+		skyTexture.wrapS = THREE.RepeatWrapping;
+		skyTexture.wrapT = THREE.RepeatWrapping;
+		skyTexture.repeat.x = 5;
+		skyTexture.repeat.y = 3;
 
-		// var textureCube = THREE.ImageUtils.loadTextureCube( urls );
-		// textureCube.format = THREE.RGBFormat;
-
-		// var shader = THREE.ShaderUtils.lib[ "cube" ];
-		// shader.uniforms[ "tCube" ].value = textureCube;
-
-		// var material = new THREE.ShaderMaterial( {
-
-		// 	fragmentShader: shader.fragmentShader,
-		// 	vertexShader: shader.vertexShader,
-		// 	uniforms: shader.uniforms,
-		// 	depthWrite: false,
-		// 	side: THREE.BackSide
-
-		// } );
-
-		// var mesh = new THREE.Mesh( new THREE.CubeGeometry( 500, 500, 500 ), material );
-		// klusterScene.scene.add( mesh );		
+		var skyMesh = new THREE.Mesh( new THREE.SphereGeometry( 600, 60, 40 ), new THREE.MeshBasicMaterial( { map: skyTexture } ) );
+		skyMesh.scale.x = -1;
+		klusterScene.universe.add( skyMesh );		
 
 		// Add stars
 
@@ -106,7 +94,7 @@ var klusterScene = {
 		var coreGeometry = new THREE.Geometry();
 		coreGeometry.colors = starColors;
 		
-		for (var i = 0; i < 4000; i++) {
+		for (var i = 0; i < 5000; i++) {
 		
 			// var radius = Math.random() * 100;
 			// var longitude = Math.PI - (Math.random() * (2*Math.PI));
@@ -116,9 +104,9 @@ var klusterScene = {
 			// var z = radius * Math.sin(longitude) * Math.sin(latitude);
 			// var y = radius * Math.cos(latitude); 	
 
-			var x = 120 - Math.random() * 240;
-			var y = 120 - Math.random() * 240;
-			var z = 120 - Math.random() * 240;
+			var x = 100 - Math.random() * 200;
+			var y = 100 - Math.random() * 200;
+			var z = 100 - Math.random() * 200;
 
 			coreGeometry.vertices.push( new THREE.Vector3( x, y, z ) );
 			var starColor = new THREE.Color(0xffffff);
@@ -212,7 +200,7 @@ var klusterScene = {
 				
 				groupGeometry.vertices.push( centroidPosition );	
 				groupColors.push(pixelColor)
-				clusterAttributes.size.value.push(8.0 + Math.random() * 8.0);
+				clusterAttributes.size.value.push(8.0 + pixelColor.getHSV().v * 8.0);
 				clusterAttributes.offset.value.push(new THREE.Vector3( x, y, z ));
 
 			}
@@ -243,7 +231,7 @@ var klusterScene = {
 
 	clearClusters: function() {
 
-		for ( var i = 1; i < klusterScene.universe.children.length; i ++ ) {
+		for ( var i = 2; i < klusterScene.universe.children.length; i ++ ) {
 
 			var object = klusterScene.universe.children[ i ];
 			klusterScene.universe.remove(object);
