@@ -48,7 +48,6 @@ var klusterEvents = {
 
 		klusterEvents.worker.onmessage = function(e) {
 			var groups = e.data;
-			console.log(groups);
 			klusterGUI.drawGroups(groups);
 		};
 
