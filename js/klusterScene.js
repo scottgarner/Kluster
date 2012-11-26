@@ -55,7 +55,7 @@ var klusterScene = {
 		var effectVignette = new THREE.ShaderPass( shaderVignette );
 
 		effectVignette.uniforms[ "offset" ].value = 0.55;
-		effectVignette.uniforms[ "darkness" ].value = 1.25;	
+		effectVignette.uniforms[ "darkness" ].value = 1.55;	
 		effectVignette.renderToScreen = true;
 
 		klusterScene.composer = new THREE.EffectComposer( klusterScene.renderer );
@@ -281,11 +281,18 @@ var klusterScene = {
     },
 
     saveImage: function() {
+
+		klusterScene.camera.aspect = 1280 / 720;
+		klusterScene.camera.updateProjectionMatrix();
+		klusterScene.renderer.setSize( 1280,720);
+		klusterScene.composer.reset();
+
 		klusterScene.renderer.clear();
 		klusterScene.composer.render( 0.01 );
-
 		var dataURL= klusterScene.renderer.domElement.toDataURL();
-		var saveWindow = window.open("about:blank", "Kluster Image", "width="+klusterScene.renderer.domElement.width+", height="+klusterScene.renderer.domElement.height);
+		klusterEvents.resize();
+
+		var saveWindow = window.open("about:blank", "Kluster Image", "width=1280, height=720");
 		var saveImage = saveWindow.document.createElement( 'img' );
 		saveImage.src = dataURL;
 		$(saveWindow.document.body).css({'margin':0, 'padding':0});

@@ -18,6 +18,10 @@ var klusterGUI = {
 			navigator.mozGetUserMedia ||
 			navigator.msGetUserMedia;
 
+		// Welcome
+
+		klusterGUI.showPanel('welcome');
+
 	},
 
 	clearCanvases: function() {
@@ -127,5 +131,24 @@ var klusterGUI = {
 			klusterGUI.calculateKMeans();
 			klusterGUI.localMediaStream.stop();
 		}
+	},
+	hidePanels: function() {
+		$('.panel').fadeOut('fast');
+	},
+	showPanel: function(panelName) {
+
+		if ($("#" + panelName).is(":visible")) {
+			klusterGUI.hidePanels();
+		}else {
+			klusterGUI.hidePanels();
+			$("#" + panelName).css({
+				'margin-left': '50%',
+				'margin-top': '50%',
+				'top': -$("#" + panelName).height()/2 - parseInt($("#" + panelName).css('padding-top')),
+				'left': -$("#" + panelName).width()/2 - parseInt($("#" + panelName).css('padding-left'))
+			});
+			$("#" + panelName).show();
+		}
+
 	}
 }

@@ -26,6 +26,7 @@ var klusterEvents = {
 		$('#reset').click(function(){
 			klusterGUI.clearCanvases();
 			klusterScene.clearClusters();
+			klusterGUI.hidePanels();
 		});
 		$('#expand').click(function( ){
 			$('#render').toggleClass('full');
@@ -34,7 +35,12 @@ var klusterEvents = {
 		$('#save').click(function( ){
 			klusterScene.saveImage();
 		});		
-		$('#about').click(function( ){});
+		$('#about').click(function( ){
+			klusterGUI.showPanel("info");
+		});
+		$('#close').click(function( ){
+			klusterGUI.hidePanels();
+		});
 
 		// Setup file reader
 
@@ -67,9 +73,7 @@ var klusterEvents = {
 
 			klusterScene.camera.aspect = klusterScene.renderWidth / klusterScene.renderHeight;
 			klusterScene.camera.updateProjectionMatrix();
-
 			klusterScene.renderer.setSize( klusterScene.renderWidth , klusterScene.renderHeight);
-
 			klusterScene.composer.reset();
 
 	},
@@ -77,6 +81,7 @@ var klusterEvents = {
 	keyUp: function(e) {
 		switch (e.keyCode) {	
 			case 27:
+				klusterGUI.hidePanels();
 				$('#render').removeClass('full');
 				klusterEvents.resize();
 				break;
@@ -98,6 +103,7 @@ var klusterEvents = {
         	case "R".charCodeAt(0):
         		klusterGUI.clearCanvases();
         		klusterScene.clearClusters();
+        		klusterGUI.hidePanels();
         		break;
 
         }
@@ -120,12 +126,13 @@ var klusterEvents = {
 			return; 
 		} 
 
-		$('#welcome').hide();
+		klusterGUI.hidePanels();
 
 		klusterEvents.reader.readAsDataURL(file); 
 	},
 
 	ignoreEvent: function(e) {
+		klusterGUI.hidePanels();
 		e.stopPropagation(); 
 		e.preventDefault(); 
 	}

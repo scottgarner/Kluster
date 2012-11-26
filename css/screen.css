@@ -16,11 +16,17 @@ body {
 	font-weight: 300;
 	font-size: 1em;
 	line-height: 1.4em;
+	letter-spacing: .075em;
 	-webkit-font-smoothing: antialiased;	
 }
 
 a {
-	color: #13daec;
+	color: #08d5e7;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration:underline;
 }
 
 h1 {
@@ -32,21 +38,6 @@ h1 {
 	padding-top: 24px;
 }
 
-#error {
-	background: #333;
-	padding: 24px;
-	border-radius: 8px;
-	text-align: center;
-	display: none;
-
-	width: 480px;
-	height: 48px;
-	position: absolute;
-	margin-top: 50%;
-	margin-left: 50%;
-	left: -264px;
-	top: -48px;
-}
 
 #main {
 	width: 100%;
@@ -140,7 +131,6 @@ label {
 
 #footer a {
 	color: #666;
-	text-decoration: none;
 }
 
 #render {
@@ -163,24 +153,47 @@ label {
 	z-index: 20;
 }
 
-#welcome {
+div.panel {
 	position: absolute;
 	background: rgba(24,24,24,.90);
 	padding: 24px;
-	height: 24px;
-	width: 360px;
 	border: 1px solid #333;	
-	text-align: center;
-	text-transform: uppercase;
-	font-size:1em;
+	font-size:1em;	
+	z-index: 30;
+}
 
+#close {
+	position:absolute;
+	cursor:pointer;
+	right:0;
+	top:0;
+	background: url('../assets/close.png');
+	width: 32px;
+	height: 32px;
+}
+
+#info {
+	display: none;
+	width: 480px;
+}
+
+#welcome {
+	display: none;
+	text-transform: uppercase;
+	text-align: center;
+	width: 360px;
+}
+
+#error {
+
+	display: none;
+	text-align: center;
+	width: 500px;
+	height: 48px;
 	margin-top: 50%;
 	margin-left: 50%;
-
-	top: -36px;
-	left: -204px;
-
-	z-index: 30;
+	left: -264px;
+	top: -48px;
 }
 
 #webcam {
