@@ -36,7 +36,6 @@ var klusterGUI = {
 
 			$("<img/>").attr('src',imageData).load(function() {
 				var aspect = this.width / this.height;
-				console.log($('#original').width() );
 				var context = $('#original')[0].getContext('2d');
 				context.drawImage(this, 0, 0, $('#original')[0].width, $('#original')[0].height);
 
@@ -55,27 +54,11 @@ var klusterGUI = {
 		var imageData = context.getImageData(0, 0, $('#original')[0].width, $('#original')[0].width);
 		var data = imageData.data;
 
-		// Pixel Array
-
-		var clusterCount = 16;
-		var pixelArray = [];
-
-		for(var i = 0; i < data.length; i += 4) {
-			pixelArray.push([data[i], data[i+1], data[i+2]]);
-		}
-
-		// Pick Centroids
-
-		var centroids = [];
-		for (var i = 0; i < clusterCount; i++)
-			centroids[i] = pixelArray[i * Math.floor(pixelArray.length / clusterCount)];
-
 		// KMeans
 
 		klusterEvents.worker.postMessage({
-			'arrayToProcess': pixelArray,
-			'centroids':centroids, 
-			'clusters':clusterCount
+			'imageData': data,
+			'clusters':12
 		});
 
 	},
@@ -109,7 +92,7 @@ var klusterGUI = {
 
 		$('#kmeans').css('width',$('#original').width());
 		$('#kmeans').css('left', parseInt($('#original').css('left')));
-		
+
 		// Add to 3D Scene
 
 		klusterScene.drawClusters(centroids,groups);

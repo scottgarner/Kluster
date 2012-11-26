@@ -6,7 +6,7 @@
 
 self.onmessage = function(e) {
 
-	var groups = kmeans ( e.data.arrayToProcess, e.data.centroids, e.data.clusters);
+	var groups = kmeans ( e.data.imageData, e.data.clusters);
 	self.postMessage(groups);
 };
 
@@ -14,8 +14,24 @@ self.onmessage = function(e) {
 // http://www.mymessedupmind.co.uk/index.php/javascript-multi-dimentional-k-means-algorithm
 
 
-function kmeans( arrayToProcess, centroids, clusters )
+function kmeans( data, clusters )
 { 
+
+	// Pixel Array
+
+	var pixelArray = [];
+
+	for(var i = 0; i < data.length; i += 4) {
+		pixelArray.push([data[i], data[i+1], data[i+2]]);
+	}
+
+	// Pick Centroids
+
+	var centroids = [];
+	for (var i = 0; i < clusters; i++)
+		centroids[i] = pixelArray[i * Math.floor(pixelArray.length / clusters)];	
+
+	// Grouping
 
 	var groups = [];
 	var tempdistance=0;
@@ -32,7 +48,7 @@ function kmeans( arrayToProcess, centroids, clusters )
 
 		var changed=false;
 
-		for( var i=0; i < arrayToProcess.length; i++)
+		for( var i=0; i < pixelArray.length; i++)
 		{   
 
 			var lowdistance=-1;
@@ -43,10 +59,10 @@ function kmeans( arrayToProcess, centroids, clusters )
 
 				var dist=0;   
 
-				for( var j=0;  j < arrayToProcess[i].length; j++ )
+				for( var j=0;  j < pixelArray[i].length; j++ )
 				{
 
-					dist+=Math.abs( Math.pow( arrayToProcess[i][j], 2 ) - Math.pow( centroids[clustersloop][j], 2 ) );
+					dist+=Math.abs( Math.pow( pixelArray[i][j], 2 ) - Math.pow( centroids[clustersloop][j], 2 ) );
 
 				}
 
@@ -69,7 +85,7 @@ function kmeans( arrayToProcess, centroids, clusters )
 
 			}
 
-			groups[lowclusters].push( arrayToProcess[i].slice() );  
+			groups[lowclusters].push( pixelArray[i].slice() );  
 
 		}
 

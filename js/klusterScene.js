@@ -118,7 +118,7 @@ var klusterScene = {
 		}	
 		
 		var coreMaterial = new THREE.ParticleBasicMaterial( { 
-			size: 3.0,map: klusterScene.starTexture , 
+			size: 2.0,map: klusterScene.starTexture , 
 			depthTest: false,  blending: THREE.AdditiveBlending, 
 			transparent : true} );
 		coreMaterial.color.setHSV( .15, .1, 1.0 );
@@ -136,38 +136,37 @@ var klusterScene = {
 		for (var i = 0; i < groups.length; i++) {
 			pixelCount += groups[i].length;
 		}
-		
-		var centroidGeometry = new THREE.SphereGeometry( 5, 16, 16);
+
+		// cluster Shader 
+
+		var clusterUniforms = THREE.UniformsUtils.clone( clusterShader.uniforms );
+
+		klusterScene.clusterUniformsArray.push(clusterUniforms);
+
+		clusterUniforms["map"].value = klusterScene.starTexture;
+		clusterUniforms["scale"].value = 100;
+		clusterUniforms["opacity"].value = .90;
+		clusterUniforms["time"].value = 0.0		
 
 		for (var i = 0; i < centroids.length; i++) {		
 
 			var centroid = centroids[i];
 			var group = groups[i];
 
-			if (group.length == 0) continue;
+			if (!group.length) continue;
 
 			var groupWeight = group.length / pixelCount;
-
-			var centroidObject = new THREE.Object3D();
 
 			var centroidColor = new THREE.Color();
 			centroidColor.setRGB(centroid[0]/255,centroid[1]/255,centroid[2]/255);
 			var centroidLAB = centroidColor.getLAB();
 
-			centroidObject.position.y = (64-centroidLAB.l) /3;
-			centroidObject.position.x = centroidLAB.a /3;
-			centroidObject.position.z = centroidLAB.b /3;		
+			var centroidPosition = new THREE.Vector3(
+				centroidLAB.a /3,
+				(50-centroidLAB.l) /3,
+				centroidLAB.b /3);
 
 			// cluster Shader 
-
-			var clusterUniforms = THREE.UniformsUtils.clone( clusterShader.uniforms );
-
-			klusterScene.clusterUniformsArray.push(clusterUniforms);
-
-			clusterUniforms["map"].value = klusterScene.starTexture;
-			clusterUniforms["scale"].value = 100;
-			clusterUniforms["opacity"].value = .75;
-			clusterUniforms["time"].value = 0.0
 
 	        var clusterAttributes = {
 	                size: { type: 'f', value: [] },
@@ -187,8 +186,8 @@ var klusterScene = {
 				var pixelColor = new THREE.Color( 0xffffff );
 				pixelColor.setRGB( group[j][0]/255, group[j][1]/255, group[j][2]/255);
 
-				var distance = new THREE.Vector3(pixelColor.r,pixelColor.g,pixelColor.b).
-					distanceTo(new THREE.Vector3(centroidColor.r,centroidColor.g,centroidColor.b));
+				// var distance = new THREE.Vector3(pixelColor.r,pixelColor.g,pixelColor.b).
+				// 	distanceTo(new THREE.Vector3(centroidColor.r,centroidColor.g,centroidColor.b));
 
 				var radius = Math.random()  * (200 * groupWeight);
 				//var radius = (distance  * 100 * (groupWeight * 10));
@@ -198,10 +197,8 @@ var klusterScene = {
 				var x = radius * Math.cos(longitude) * Math.sin(latitude);
 				var z = radius * Math.sin(longitude) * Math.sin(latitude);
 				var y = radius * Math.cos(latitude) ; 
-
-				var vector = new THREE.Vector3( x, y, z );
-				groupGeometry.vertices.push( centroidObject.position );	
-
+				
+				groupGeometry.vertices.push( centroidPosition );	
 				groupColors.push(pixelColor)
 				clusterAttributes.size.value.push(8.0 + Math.random() * 8.0);
 				clusterAttributes.offset.value.push(new THREE.Vector3( x, y, z ));
@@ -222,10 +219,10 @@ var klusterScene = {
 
 			// cluster Mesh
 
-			var groupMesh = new THREE.ParticleSystem( groupGeometry, groupMaterial );			
+			var groupMesh = new THREE.ParticleSystem( groupGeometry, groupMaterial );
+			groupMesh.position.copy(centroidPosition);			
 
-			centroidObject.add(groupMesh);
-			klusterScene.universe.add(centroidObject);
+			klusterScene.universe.add(groupMesh);
 
 		}
 
@@ -234,15 +231,11 @@ var klusterScene = {
 
 	clearClusters: function() {
 
-		for ( var i = 0; i < klusterScene.universe.children.length; i ++ ) {
+		for ( var i = 1; i < klusterScene.universe.children.length; i ++ ) {
 
 			var object = klusterScene.universe.children[ i ];
-			if ( object instanceof THREE.Object3D && !(object instanceof THREE.ParticleSystem)) {
-
-				klusterScene.universe.remove(object);
-				i--;
-
-			}
+			klusterScene.universe.remove(object);
+			i--;
 		}
 
 	},
@@ -259,19 +252,9 @@ var klusterScene = {
         		klusterScene.clusterUniformsArray[i]["time"].value = time / 1000;
         }
 
-    	// Rotate clusters and Stars
+    	// Rotate universe
 
     	klusterScene.universe.rotation.y += 0.001;
-
-		// for ( var i = 0; i < klusterScene.universe.children.length; i ++ ) {
-
-		// 	var object = klusterScene.universe.children[ i ];
-		// 	if ( object instanceof THREE.Object3D && !(object instanceof THREE.ParticleSystem)) {
-
-		// 		object.rotation.y += 0.001;
-
-		// 	}
-		// }
 
 		// Render scene
 
@@ -282,7 +265,7 @@ var klusterScene = {
     },
 
     render: function() {
-    	        klusterScene.renderer.render( klusterScene.scene, klusterScene.camera );
+    	klusterScene.renderer.render( klusterScene.scene, klusterScene.camera );
     }
 
 

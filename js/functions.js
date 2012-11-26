@@ -1,4 +1,4 @@
-//http://cookbooks.adobe.com/post_Useful_color_equations__RGB_to_LAB_converter-14227.html
+// http://www.easyrgb.com/index.php?X=MATH
 
 THREE.Color.prototype.getXYZ = function() {
 

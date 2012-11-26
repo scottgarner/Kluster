@@ -2,7 +2,7 @@
  * @author Scott Garner / http://scott.j38.net/
  */
 
- "use strict";
+"use strict";
 
 var klusterEvents = {
 	reader: null,
@@ -48,6 +48,7 @@ var klusterEvents = {
 
 		klusterEvents.worker.onmessage = function(e) {
 			var groups = e.data;
+			console.log(groups);
 			klusterGUI.drawGroups(groups);
 		};
 
