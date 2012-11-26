@@ -32,7 +32,7 @@ THREE.Color.prototype.getLAB = function() {
 
 	const REF_X = 95.047;
 	const REF_Y = 100.000; 
-	const REF_Z = g; 
+	const REF_Z = 108.883; 
 	
 	var x = xyz.x / REF_X;   
 	var y = xyz.y / REF_Y;  
