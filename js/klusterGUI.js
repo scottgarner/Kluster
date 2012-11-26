@@ -109,7 +109,7 @@ var klusterGUI = {
 
 		$('#kmeans').css('width',$('#original').width());
 		$('#kmeans').css('left', parseInt($('#original').css('left')));
-		r
+		
 		// Add to 3D Scene
 
 		klusterScene.drawClusters(centroids,groups);
