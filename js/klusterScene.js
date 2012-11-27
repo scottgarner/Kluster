@@ -5,25 +5,10 @@
 "use strict";
 
 var klusterScene = {
-	startTime: Date.now(),
-
-	renderWidth: $("#render").width(),
-	renderHeight: $("#render").height(),	
-
-	camera: null,
-	controls: null,
-	scene: null,
-	renderer: null,
-
-	geometry: null,
-	material: null,
-	mesh: null,
-
-	cameraStep: -1,
-
+	
+	clock: new THREE.Clock(),
+	autoPilotIndex: 0,
 	starTexture: THREE.ImageUtils.loadTexture( "textures/sprites/particle.png" ),
-
-	clusterUniformsArray: [],
 
 	init: function () {
 
@@ -31,22 +16,27 @@ var klusterScene = {
 		klusterScene.renderHeight = $("#render").height();		
 
 		klusterScene.camera = new THREE.PerspectiveCamera( 24, klusterScene.renderWidth / klusterScene.renderHeight, 0.1, 5000 );
-		klusterScene.camera.position.z = 120;
-
-		klusterScene.controls = new THREE.OrbitControls( klusterScene.camera );
-		klusterScene.controls.maxDistance = 200;
-		klusterScene.controls.minPolarAngle = Math.PI * .2;
-		klusterScene.controls.maxPolarAngle = Math.PI * .8;
+		klusterScene.camera.position.z = 200;
 
 		klusterScene.scene = new THREE.Scene();
 
 		klusterScene.universe = new THREE.Object3D();
 		klusterScene.scene.add( klusterScene.universe );
 
+		klusterScene.clusters = new THREE.Object3D();
+		klusterScene.universe.add(klusterScene.clusters);
+
 		klusterScene.renderer = new THREE.WebGLRenderer();
 		klusterScene.renderer.setSize( klusterScene.renderWidth, klusterScene.renderHeight );
 		klusterScene.renderer.setClearColorHex( 0x0c0d10, 1 );
 		klusterScene.renderer.autoClear = false;
+
+		// Controls
+
+		klusterScene.controls = new THREE.OrbitControls( klusterScene.camera );
+		klusterScene.controls.maxDistance = 400;
+		klusterScene.controls.minPolarAngle = Math.PI * .2;
+		klusterScene.controls.maxPolarAngle = Math.PI * .8;		
 
 		// Post-processing
 
@@ -94,7 +84,7 @@ var klusterScene = {
 		var coreGeometry = new THREE.Geometry();
 		coreGeometry.colors = starColors;
 		
-		for (var i = 0; i < 5000; i++) {
+		for (var i = 0; i < 6000; i++) {
 		
 			// var radius = Math.random() * 100;
 			// var longitude = Math.PI - (Math.random() * (2*Math.PI));
@@ -141,11 +131,9 @@ var klusterScene = {
 
 		var clusterUniforms = THREE.UniformsUtils.clone( clusterShader.uniforms );
 
-		klusterScene.clusterUniformsArray.push(clusterUniforms);
-
 		clusterUniforms["map"].value = klusterScene.starTexture;
 		clusterUniforms["scale"].value = 100;
-		clusterUniforms["opacity"].value = .90;
+		clusterUniforms["opacity"].value = 1.0;
 		clusterUniforms["time"].value = 0.0		
 
 		for (var i = 0; i < centroids.length; i++) {		
@@ -162,15 +150,14 @@ var klusterScene = {
 			var centroidLAB = centroidColor.getLAB();
 
 			var centroidPosition = new THREE.Vector3(
-				centroidLAB.a /3,
-				(50-centroidLAB.l) /3,
-				centroidLAB.b /3);
+				centroidLAB.a ,
+				(50-centroidLAB.l) ,
+				centroidLAB.b );
 
 			// cluster Shader 
 
 	        var clusterAttributes = {
 	                size: { type: 'f', value: [] },
-	                offset: { type: 'v3', value: []}
 	        };				
 
 			// cluster Geometry
@@ -190,7 +177,7 @@ var klusterScene = {
 				// 	distanceTo(new THREE.Vector3(centroidColor.r,centroidColor.g,centroidColor.b));
 
 				var radius = Math.random()  * (200 * groupWeight);
-				//var radius = (distance  * 100 * (groupWeight * 10));
+				//var radius = (distance  * 80 * (groupWeight * 10));
 				var longitude = Math.PI - (Math.random() * (2*Math.PI));
 				var latitude =  (Math.random() * Math.PI);
 
@@ -198,11 +185,9 @@ var klusterScene = {
 				var z = radius * Math.sin(longitude) * Math.sin(latitude);
 				var y = radius * Math.cos(latitude) ; 
 				
-				groupGeometry.vertices.push( centroidPosition );	
+				groupGeometry.vertices.push( new THREE.Vector3( x, y, z ) );	
 				groupColors.push(pixelColor)
-				clusterAttributes.size.value.push(8.0 + pixelColor.getHSV().v * 8.0);
-				clusterAttributes.offset.value.push(new THREE.Vector3( x, y, z ));
-
+				clusterAttributes.size.value.push(8.0 + pixelColor.getHSV().s * 8.0);
 			}
 
 			// cluster Material
@@ -220,37 +205,115 @@ var klusterScene = {
 			// cluster Mesh
 
 			var groupMesh = new THREE.ParticleSystem( groupGeometry, groupMaterial );
-			groupMesh.position.copy(centroidPosition);			
+			groupMesh.position.copy(centroidPosition);		
 
-			klusterScene.universe.add(groupMesh);
+			groupMesh.startTime = klusterScene.clock.getElapsedTime();	
+
+			// var testMesh = new THREE.Mesh( new THREE.SphereGeometry( 1, 60, 40 ), new THREE.MeshBasicMaterial( ) );
+			// groupMesh.add( testMesh );	
+
+			klusterScene.clusters.add(groupMesh);
 
 		}
 
-		klusterScene.startTime = Date.now();
+	
 	},
 
 	clearClusters: function() {
 
-		for ( var i = 2; i < klusterScene.universe.children.length; i ++ ) {
-
-			var object = klusterScene.universe.children[ i ];
-			klusterScene.universe.remove(object);
+		for ( var i = 0; i < klusterScene.clusters.children.length; i ++ ) {
+			var object = klusterScene.clusters.children[ i ];
+			klusterScene.clusters.remove(object);
 			i--;
 		}
 
+		klusterScene.autoPilotStop();
+
 	},
+
+	autoPilot: function() {
+
+		if (klusterScene.autoPilotTween == null && klusterScene.clusters.children.length > 0)
+			klusterScene.autoPilotStart();
+		else
+			klusterScene.autoPilotStop();
+
+	},
+
+	autoPilotStart: function () {
+
+		var previousTarget = klusterScene.clusters.children[klusterScene.previousTarget()];
+		var currentTarget = klusterScene.clusters.children[ klusterScene.autoPilotIndex ];
+		var nextTarget = klusterScene.clusters.children[ klusterScene.nextTarget() ];
+
+		var previousPosition = previousTarget.matrixWorld.getPosition().clone();
+		var currentPosition = currentTarget.matrixWorld.getPosition().clone();
+		var nextPosition = nextTarget.matrixWorld.getPosition().clone();
+
+		klusterScene.autoPilotTween = new TWEEN.Tween( previousPosition )
+			.to(nextPosition, 6000)
+			.onUpdate(function() {
+				klusterScene.camera.lookAt(this);
+			})
+			.onComplete(function() {
+				klusterScene.autoPilotIndex = klusterScene.nextTarget();
+				klusterScene.autoPilotStart();
+			})			
+            // .interpolation(TWEEN.Interpolation.CatmullRom)
+            // .easing( TWEEN.Easing.Quintic.InOut)			
+			.start();
+
+		klusterScene.camera.position.copy(currentPosition);
+
+	},
+
+	autoPilotStop: function() {
+		if (klusterScene.autoPilotTween != null) {
+			klusterScene.autoPilotTween.stop();
+			klusterScene.autoPilotTween = null;
+
+			klusterScene.camera.position.x = 0;
+			klusterScene.camera.position.y = 0;
+			klusterScene.camera.position.z = 200;
+		}
+	},
+
+	nextTarget: function() {
+		var nextTarget = klusterScene.autoPilotIndex + 1;
+		if (nextTarget == klusterScene.clusters.children.length)
+			nextTarget = 0;
+		return nextTarget;
+	},
+
+	previousTarget: function() {
+		var previousTarget = klusterScene.autoPilotIndex - 1;
+		if (previousTarget == -1)
+			previousTarget = klusterScene.clusters.children.length-1;
+		return previousTarget;		
+	},
+
 	animate: function () {
 
         requestAnimationFrame( klusterScene.animate );
-        klusterScene.controls.update();
+
+        // Controls and auto pilot
+
+        if (klusterScene.autoPilotTween == null)
+        	klusterScene.controls.update(klusterScene.clock.getDelta());
+        else
+        	TWEEN.update();
 
         // Update Uniforms
 
-        var time = Date.now() - klusterScene.startTime;
-        if (klusterScene.clusterUniformsArray[0]) {
-        	for (var i = 0; i < klusterScene.clusterUniformsArray.length; i++)
-        		klusterScene.clusterUniformsArray[i]["time"].value = time / 1000;
-        }
+        var time = klusterScene.clock.getElapsedTime();
+
+		for ( var i = 0; i < klusterScene.clusters.children.length; i ++ ) {
+
+			var cluster = klusterScene.clusters.children[ i ];
+			var clusterUniforms = cluster.material.uniforms;
+			clusterUniforms["time"].value = klusterScene.clock.getElapsedTime() - cluster.startTime;
+
+		}        
 
     	// Rotate universe
 

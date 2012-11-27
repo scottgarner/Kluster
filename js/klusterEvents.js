@@ -35,6 +35,9 @@ var klusterEvents = {
 		$('#save').click(function( ){
 			klusterScene.saveImage();
 		});		
+		$('#auto').click(function( ){
+			klusterScene.autoPilot();
+		});			
 		$('#about').click(function( ){
 			klusterGUI.showPanel("info");
 		});
@@ -104,6 +107,9 @@ var klusterEvents = {
         		klusterGUI.clearCanvases();
         		klusterScene.clearClusters();
         		klusterGUI.hidePanels();
+        		break;
+        	case "A".charCodeAt(0):
+        		klusterScene.autoPilot();
         		break;
 
         }
