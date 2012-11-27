@@ -162,9 +162,9 @@ var klusterScene = {
 
 			// cluster Geometry
 
-			var groupGeometry = new THREE.Geometry();
-			var groupColors = [];
-			groupGeometry.colors = groupColors;
+			var clusterGeometry = new THREE.Geometry();
+			var clusterColors = [];
+			clusterGeometry.colors = clusterColors;
 
 			// Populate Geometry, Colors and Attributes
 
@@ -173,11 +173,11 @@ var klusterScene = {
 				var pixelColor = new THREE.Color( 0xffffff );
 				pixelColor.setRGB( group[j][0]/255, group[j][1]/255, group[j][2]/255);
 
-				// var distance = new THREE.Vector3(pixelColor.r,pixelColor.g,pixelColor.b).
-				// 	distanceTo(new THREE.Vector3(centroidColor.r,centroidColor.g,centroidColor.b));
+				var distance = new THREE.Vector3(pixelColor.r,pixelColor.g,pixelColor.b).
+					distanceTo(new THREE.Vector3(centroidColor.r,centroidColor.g,centroidColor.b));
 
-				var radius = Math.random()  * (200 * groupWeight);
-				//var radius = (distance  * 80 * (groupWeight * 10));
+				//var radius = Math.random()  * (200 * groupWeight);
+				var radius = (distance  * 80 * (groupWeight * 10));
 				var longitude = Math.PI - (Math.random() * (2*Math.PI));
 				var latitude =  (Math.random() * Math.PI);
 
@@ -185,14 +185,14 @@ var klusterScene = {
 				var z = radius * Math.sin(longitude) * Math.sin(latitude);
 				var y = radius * Math.cos(latitude) ; 
 				
-				groupGeometry.vertices.push( new THREE.Vector3( x, y, z ) );	
-				groupColors.push(pixelColor)
+				clusterGeometry.vertices.push( new THREE.Vector3( x, y, z ) );	
+				clusterColors.push(pixelColor)
 				clusterAttributes.size.value.push(8.0 + pixelColor.getHSV().s * 8.0);
 			}
 
 			// cluster Material
 
-			var groupMaterial = new THREE.ShaderMaterial( {
+			var clusterMaterial = new THREE.ShaderMaterial( {
 				uniforms: clusterUniforms,
 				attributes: clusterAttributes,
 				vertexShader: clusterShader.vertexShader,
@@ -204,15 +204,15 @@ var klusterScene = {
 
 			// cluster Mesh
 
-			var groupMesh = new THREE.ParticleSystem( groupGeometry, groupMaterial );
-			groupMesh.position.copy(centroidPosition);		
+			var clusterMesh = new THREE.ParticleSystem( clusterGeometry, clusterMaterial );
+			clusterMesh.position.copy(centroidPosition);		
 
-			groupMesh.startTime = klusterScene.clock.getElapsedTime();	
+			clusterMesh.startTime = klusterScene.clock.getElapsedTime();	
 
 			// var testMesh = new THREE.Mesh( new THREE.SphereGeometry( 1, 60, 40 ), new THREE.MeshBasicMaterial( ) );
 			// groupMesh.add( testMesh );	
 
-			klusterScene.clusters.add(groupMesh);
+			klusterScene.clusters.add(clusterMesh);
 
 		}
 
@@ -310,6 +310,8 @@ var klusterScene = {
 		for ( var i = 0; i < klusterScene.clusters.children.length; i ++ ) {
 
 			var cluster = klusterScene.clusters.children[ i ];
+			cluster.rotation.y += 0.003;
+			
 			var clusterUniforms = cluster.material.uniforms;
 			clusterUniforms["time"].value = klusterScene.clock.getElapsedTime() - cluster.startTime;
 
