@@ -20,6 +20,7 @@ var klusterEvents = {
 		$('#main').bind('dragover', klusterEvents.ignoreEvent); 
 		$('#main').bind('dragleave', klusterEvents.ignoreEvent); 
 		$('#main').bind('drop', klusterEvents.dropImage); 
+		$('#main').bind('mousedown', klusterEvents.mouseDown); 
 
 		// Buttons
 
@@ -78,6 +79,11 @@ var klusterEvents = {
 			klusterScene.camera.updateProjectionMatrix();
 			klusterScene.renderer.setSize( klusterScene.renderWidth , klusterScene.renderHeight);
 			klusterScene.composer.reset();
+
+	},
+
+	mouseDown: function(e) {
+		klusterScene.autoPilotStop();
 
 	},
 

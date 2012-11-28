@@ -176,7 +176,7 @@ var klusterScene = {
 				var distance = new THREE.Vector3(pixelColor.r,pixelColor.g,pixelColor.b).
 					distanceTo(new THREE.Vector3(centroidColor.r,centroidColor.g,centroidColor.b));
 
-				//var radius = Math.random()  * (200 * groupWeight);
+				var radius = Math.random()  * (200 * groupWeight);
 				var radius = (distance  * 80 * (groupWeight * 10));
 				var longitude = Math.PI - (Math.random() * (2*Math.PI));
 				var latitude =  (Math.random() * Math.PI);
@@ -323,14 +323,14 @@ var klusterScene = {
 
 		// Render scene
 
-		klusterScene.renderer.clear();
-		klusterScene.composer.render( 0.01 );
-		//klusterScene.render();
+		klusterScene.render();
 
     },
 
     render: function() {
-    	klusterScene.renderer.render( klusterScene.scene, klusterScene.camera );
+		klusterScene.renderer.clear();
+		klusterScene.composer.render( 0.01 );    	
+    	//klusterScene.renderer.render( klusterScene.scene, klusterScene.camera );
     },
 
     saveImage: function() {
@@ -340,8 +340,7 @@ var klusterScene = {
 		klusterScene.renderer.setSize( 1280,720);
 		klusterScene.composer.reset();
 
-		klusterScene.renderer.clear();
-		klusterScene.composer.render( 0.01 );
+		klusterScene.render();
 		var dataURL= klusterScene.renderer.domElement.toDataURL();
 		klusterEvents.resize();
 

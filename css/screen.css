@@ -12,11 +12,10 @@ body {
 	background: #111;
 	color: #ccc;
 
-	font-family: "HelveticaNeueLight", "HelveticaNeue-Light", "Helvetica Neue Light", "HelveticaNeue", "Helvetica Neue", sans-serif;
-	font-weight: 300;
+	font-family: "Lato", "Helvetica Neue", "Hevetcia" sans-serif;
+	font-weight: 400;
 	font-size: 1em;
 	line-height: 1.4em;
-	letter-spacing: .075em;
 	-webkit-font-smoothing: antialiased;	
 }
 
@@ -95,38 +94,42 @@ div.image {
 
 label {
 	margin:0;
-	font-size: .6em;
+	font-size: .65em;
 	text-transform: uppercase;
 	color: #999;
 }
 
 .button {
-	color: #ccc;
+	color: #999;
 	display: block;
 	background: rgba(0,0,0,.35);	
 	width: 224px;	
 	border: 1px solid #333;	
 	text-align: center;
-	font-size: .8em;
+	font-size: .9em;
 	margin-bottom: 4px;
 	cursor: pointer;
 }
 
 .button:hover {
 	background: rgba(32,32,32,1);
+	color: #ccc;
 }
 
 .button:active {
 	background: #444;
+	color: #fff;
 }
 
 #footer {
 	width: 224px;
 	position: absolute;
 	bottom: 24px;
-	font-size: .6em;
+	font-size: .65em;
 	text-transform: uppercase;
+	text-align: center;
 	color: #666;
+	z-index: -10;
 }
 
 #footer a {
