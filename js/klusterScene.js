@@ -350,20 +350,31 @@ var klusterScene = {
 
     saveImage: function() {
 
-		klusterScene.camera.aspect = 1280 / 720;
+		klusterScene.camera.aspect = 1920 / 1080;
 		klusterScene.camera.updateProjectionMatrix();
-		klusterScene.renderer.setSize( 1280,720);
+		klusterScene.renderer.setSize( 1920,1080);
 		klusterScene.composer.reset();
 
 		klusterScene.render();
 		var dataURL= klusterScene.renderer.domElement.toDataURL();
 		klusterEvents.resize();
 
-		var saveWindow = window.open("about:blank", "Kluster Image", "width=1280, height=720");
-		var saveImage = saveWindow.document.createElement( 'img' );
-		saveImage.src = dataURL;
-		$(saveWindow.document.body).css({'margin':0, 'padding':0});
-		saveWindow.document.body.appendChild( saveImage );		
+		//take apart data URL
+		var parts = dataURL.match(/data:([^;]*)(;base64)?,([0-9A-Za-z+/]+)/);
+
+		//assume base64 encoding
+		var binStr = atob(parts[3]);
+
+		//convert to binary in ArrayBuffer
+		var buf = new ArrayBuffer(binStr.length);
+		var view = new Uint8Array(buf);
+		for(var i = 0; i < view.length; i++)
+		  view[i] = binStr.charCodeAt(i);
+
+		var blob = new Blob([view], {'type': parts[1]});
+		var blobURL = window.URL.createObjectURL(blob)
+
+		window.open(blobURL, "_blank", "width=1280, height=720");
 
     }
 

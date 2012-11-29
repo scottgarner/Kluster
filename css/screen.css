@@ -1,6 +1,7 @@
 html {
 	height: 100%;
 	width: 100%;
+	font-size: 16px;
 }
 body {
 	height: 100%;
@@ -12,7 +13,7 @@ body {
 	background: #111;
 	color: #ccc;
 
-	font-family: "Lato", "Helvetica Neue", "Hevetcia" sans-serif;
+	font-family: "Lato", "Helvetica Neue", "Hevetcia", sans-serif;
 	font-weight: 400;
 	font-size: 1em;
 	line-height: 1.4em;
@@ -70,11 +71,11 @@ div.image {
 	max-width: 200px;
 	max-height: 112px;
 
-	margin-top: 50%;
-	margin-left: 50%;
+	top: 50%;
+	left: 50%;
 
-	left: -100px;
-	top: -56px;	
+	margin-left: -100px;
+	margin-top: -56px;	
 }
 
 #webcam {
@@ -85,11 +86,12 @@ div.image {
 	max-width: 200px;
 	max-height: 112px;
 
-	margin-top: 50%;
-	margin-left: 50%;
+	top: 50%;
+	left: 50%;
 
-	left: -100px;
-	top: -56px;	
+	margin-left: -100px;
+	margin-top: -56px;	
+	
 	z-index:10;
 	display:none;
 }
@@ -102,11 +104,11 @@ div.image {
 	max-width: 200px;
 	max-height: 112px;
 
-	margin-top: 50%;
-	margin-left: 50%;
+	top: 50%;
+	left: 50%;
 
-	left: -100px;
-	top: -56px;	
+	margin-left: -100px;
+	margin-top: -56px;	
 }	
 
 label {
@@ -189,7 +191,7 @@ div.panel {
 
 #info {
 	display: none;
-	width: 420px;
+	width: 430px;
 }
 
 #welcome {

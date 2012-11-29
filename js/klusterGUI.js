@@ -44,7 +44,7 @@ var klusterGUI = {
 				context.drawImage(this, 0, 0, $('#original')[0].width, $('#original')[0].height);
 
 				$('#original').css('width',$('#original').height()* aspect);
-				$('#original').css('left', - $('#original').width() / 2);
+				$('#original').css('margin-left', - $('#original').width() / 2);
 				
 				klusterGUI.calculateKMeans();
 			})			
@@ -97,7 +97,7 @@ var klusterGUI = {
 		context.putImageData(imageData, 0,0);
 
 		$('#kmeans').css('width',$('#original').width());
-		$('#kmeans').css('left', parseInt($('#original').css('left')));
+		$('#kmeans').css('margin-left', parseInt($('#original').css('margin-left')));
 
 		// Add to 3D Scene
 
@@ -133,7 +133,7 @@ var klusterGUI = {
 			context.drawImage($("#webcam")[0], 0, 0, $('#original')[0].width, $('#original')[0].height);
 
 			$('#original').css('width',$('#original').height()* aspect);
-			$('#original').css('left', - $('#original').width() / 2);
+			$('#original').css('margin-left', - $('#original').width() / 2);
 						
 			$("#webcam").hide();
 			
@@ -151,10 +151,10 @@ var klusterGUI = {
 		}else {
 			klusterGUI.hidePanels();
 			$("#" + panelName).css({
-				'margin-left': '50%',
-				'margin-top': '50%',
-				'top': -$("#" + panelName).height()/2 - parseInt($("#" + panelName).css('padding-top')),
-				'left': -$("#" + panelName).width()/2 - parseInt($("#" + panelName).css('padding-left'))
+				'left': '50%',
+				'top': '50%',
+				'margin-top': -$("#" + panelName).height()/2 - parseInt($("#" + panelName).css('padding-top')),
+				'margin-left': -$("#" + panelName).width()/2 - parseInt($("#" + panelName).css('padding-left'))
 			});
 			$("#" + panelName).show();
 		}
