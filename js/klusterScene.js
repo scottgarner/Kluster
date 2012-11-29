@@ -54,23 +54,12 @@ var klusterScene = {
 
 		klusterScene.composer.addPass( renderModel );
 		klusterScene.composer.addPass( effectFilm );
-		klusterScene.composer.addPass( effectVignette );
+		klusterScene.composer.addPass( effectVignette );	
 
-		// Add environment
+		// Add scene elements
 
-		var skyTexture = THREE.ImageUtils.loadTexture( 'textures/stars.jpg', new THREE.UVMapping());
-		skyTexture.wrapS = THREE.RepeatWrapping;
-		skyTexture.wrapT = THREE.RepeatWrapping;
-		skyTexture.repeat.x = 5;
-		skyTexture.repeat.y = 3;
-
-		var skyMesh = new THREE.Mesh( new THREE.SphereGeometry( 600, 60, 40 ), new THREE.MeshBasicMaterial( { map: skyTexture } ) );
-		skyMesh.scale.x = -1;
-		klusterScene.universe.add( skyMesh );		
-
-		// Add stars
-
-		klusterScene.drawStars();
+		klusterScene.addEnvironment();
+		klusterScene.addStars();
 
 		// Append canvas
 
@@ -78,7 +67,23 @@ var klusterScene = {
 
 	},
 
-	drawStars: function() {
+	addEnvironment: function() {
+
+		var skyTexture = THREE.ImageUtils.loadTexture( 'textures/stars.jpg');
+		skyTexture.wrapS = THREE.RepeatWrapping;
+		skyTexture.wrapT = THREE.RepeatWrapping;
+		skyTexture.repeat.x = 5;
+		skyTexture.repeat.y = 3;
+
+		var skyMaterial = new THREE.MeshBasicMaterial( { map: skyTexture } );
+
+		var skyMesh = new THREE.Mesh( new THREE.SphereGeometry( 600, 60, 40 ), skyMaterial );
+		skyMesh.scale.x = -1;
+		klusterScene.universe.add( skyMesh );	
+
+	},
+
+	addStars: function() {
 
 		var starColors = [];
 		var coreGeometry = new THREE.Geometry();
@@ -119,7 +124,9 @@ var klusterScene = {
 
 	},
 
-	drawClusters: function (centroids,groups) {
+	drawClusters: function (clusters) {
+		var groups = clusters.groups;
+		var centroids = clusters.centroids;
 
 		var pixelCount = 0;
 
@@ -158,6 +165,7 @@ var klusterScene = {
 
 	        var clusterAttributes = {
 	                size: { type: 'f', value: [] },
+	                origin: { type: 'v3', value: [] },
 	        };				
 
 			// cluster Geometry
@@ -176,17 +184,22 @@ var klusterScene = {
 				var distance = new THREE.Vector3(pixelColor.r,pixelColor.g,pixelColor.b).
 					distanceTo(new THREE.Vector3(centroidColor.r,centroidColor.g,centroidColor.b));
 
-				var radius = Math.random()  * (200 * groupWeight);
-				var radius = (distance  * 80 * (groupWeight * 10));
+				//var radius = Math.random()  * (200 * groupWeight);
+				var radius = (distance  * 96 * (groupWeight * 12));
 				var longitude = Math.PI - (Math.random() * (2*Math.PI));
 				var latitude =  (Math.random() * Math.PI);
 
 				var x = radius * Math.cos(longitude) * Math.sin(latitude);
 				var z = radius * Math.sin(longitude) * Math.sin(latitude);
 				var y = radius * Math.cos(latitude) ; 
+
+				var originX = 0; //(100 - group[j][3]) / 1.0;
+				var originY = 0; //(100 - group[j][4]) / 1.0;
+				var originZ = 0;				
 				
 				clusterGeometry.vertices.push( new THREE.Vector3( x, y, z ) );	
 				clusterColors.push(pixelColor)
+				clusterAttributes.origin.value.push(new THREE.Vector3( originX, originY, originZ ) );	
 				clusterAttributes.size.value.push(8.0 + pixelColor.getHSV().s * 8.0);
 			}
 
@@ -250,8 +263,10 @@ var klusterScene = {
 		var currentPosition = currentTarget.matrixWorld.getPosition().clone();
 		var nextPosition = nextTarget.matrixWorld.getPosition().clone();
 
+		var timeOffset = previousPosition.distanceTo(nextPosition) * 100;
+
 		klusterScene.autoPilotTween = new TWEEN.Tween( previousPosition )
-			.to(nextPosition, 6000)
+			.to(nextPosition, 6000 + timeOffset)
 			.onUpdate(function() {
 				klusterScene.camera.lookAt(this);
 			})

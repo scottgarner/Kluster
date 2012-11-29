@@ -1,7 +1,3 @@
-/**
- * @author Scott Garner / http://scott.j38.net/
- */
-
  clusterShader = {
     uniforms: THREE.UniformsUtils.merge( [
         THREE.UniformsLib[ "particle" ],
@@ -11,6 +7,7 @@
 
     ] ),
     vertexShader: [
+        "attribute vec3 origin; ",
         "attribute float size; ",
         "uniform float time;",
         "uniform float scale; ",
@@ -31,8 +28,7 @@
 
         "   vColor = color;",        
         "   float amount = (time > size/2.0) ? 1.0 : 1.0 - pow(1.0 - (time / (size/2.0)), 5.0);",
-
-        "   vec4 worldZero =  viewMatrix * vec4( 0,0,0,1.0);",
+        "   vec4 worldZero =  viewMatrix * vec4( origin ,1.0);",
         //"   vec4 mvPosition = modelViewMatrix * (vec4(position, 1.0) * rotate_y(time / length(position) * 2.0) ) ;",
         "   vec4 mvPosition = modelViewMatrix * (vec4(position, 1.0) ) ;",
         "   vec4 lerpPosition = mix(worldZero, mvPosition, amount)  ;",

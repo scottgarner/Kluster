@@ -62,15 +62,17 @@ var klusterGUI = {
 
 		klusterEvents.worker.postMessage({
 			'imageData': data,
-			'clusters':12
+			'clusters':12,
+			'imageWidth': $('#original')[0].width,
+			'imageHeight': $('#original')[0].height
 		});
 
 	},
 
-	drawGroups: function(workerData) {
+	drawGroups: function(clusters) {
 
-		var groups = workerData.groups;
-		var centroids = workerData.centroids;
+		var groups = clusters.groups;
+		var centroids = clusters.centroids;
 		
 		var context = $('#kmeans')[0].getContext('2d');	
 		var imageData = context.getImageData(0, 0, $('#kmeans')[0].width, $('#kmeans')[0].width);
@@ -99,7 +101,7 @@ var klusterGUI = {
 
 		// Add to 3D Scene
 
-		klusterScene.drawClusters(centroids,groups);
+		klusterScene.drawClusters(clusters);
 
 	},
 
@@ -107,14 +109,18 @@ var klusterGUI = {
 
 		// http://www.html5rocks.com/en/tutorials/getusermedia/intro/
 
-		navigator.getUserMedia({video: true},
-			function(stream) {
-				klusterGUI.localMediaStream = stream;
-				$("#webcam")[0].src = window.URL.createObjectURL(stream);
-
-				$("#webcam").show();
-			},
-			function(e) { console.log('Error!', e); });
+		if (klusterGUI.localMediaStream == null) {
+			navigator.getUserMedia({video: true},
+				function(stream) {
+					klusterGUI.clearCanvases();
+					klusterGUI.localMediaStream = stream;
+					$("#webcam")[0].src = window.URL.createObjectURL(stream);
+					$("#webcam").show();
+				},
+				function(e) { console.log('Error!', e); });
+		} else {
+			$("#webcam").show();
+		}
 	},
 
 	takeVideoSnapshot: function() {
@@ -122,14 +128,17 @@ var klusterGUI = {
 		// http://www.html5rocks.com/en/tutorials/getusermedia/intro/
 
 		if (klusterGUI.localMediaStream != null) {
-
+			var aspect = $("#webcam")[0].videoWidth / $("#webcam")[0].videoHeight ;
 			var context = $('#original')[0].getContext('2d');
-			context.drawImage($("#webcam")[0], 0, 0, 400, 200);
-			
+			context.drawImage($("#webcam")[0], 0, 0, $('#original')[0].width, $('#original')[0].height);
+
+			$('#original').css('width',$('#original').height()* aspect);
+			$('#original').css('left', - $('#original').width() / 2);
+						
 			$("#webcam").hide();
 			
 			klusterGUI.calculateKMeans();
-			klusterGUI.localMediaStream.stop();
+			//klusterGUI.localMediaStream.stop();
 		}
 	},
 	hidePanels: function() {

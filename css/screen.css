@@ -77,6 +77,23 @@ div.image {
 	top: -56px;	
 }
 
+#webcam {
+	position: absolute;
+
+	height: 112px;
+	width: 200px;
+	max-width: 200px;
+	max-height: 112px;
+
+	margin-top: 50%;
+	margin-left: 50%;
+
+	left: -100px;
+	top: -56px;	
+	z-index:10;
+	display:none;
+}
+
 #kmeans {
 	position: absolute;
 	
@@ -172,7 +189,7 @@ div.panel {
 
 #info {
 	display: none;
-	width: 480px;
+	width: 420px;
 }
 
 #welcome {
@@ -192,11 +209,4 @@ div.panel {
 	margin-left: 50%;
 	left: -264px;
 	top: -48px;
-}
-
-#webcam {
-	position: absolute;
-	width: 400px;
-	height: 200px;
-	display: none;
 }
