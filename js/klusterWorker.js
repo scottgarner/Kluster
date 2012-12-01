@@ -4,7 +4,7 @@
 
 "use strict";
 
-importScripts('figue.js');
+importScripts('vendor/figue.js');
 
 self.onmessage = function(e) {
 

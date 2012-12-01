@@ -89,15 +89,7 @@ var klusterScene = {
 		var coreGeometry = new THREE.Geometry();
 		coreGeometry.colors = starColors;
 		
-		for (var i = 0; i < 6000; i++) {
-		
-			// var radius = Math.random() * 100;
-			// var longitude = Math.PI - (Math.random() * (2*Math.PI));
-			// var latitude =  (Math.random() * Math.PI);
-			
-			// var x = radius * Math.cos(longitude) * Math.sin(latitude);
-			// var z = radius * Math.sin(longitude) * Math.sin(latitude);
-			// var y = radius * Math.cos(latitude); 	
+		for (var i = 0; i < 6000; i++) {	
 
 			var x = 120 - Math.random() * 240;
 			var y = 120 - Math.random() * 240;
