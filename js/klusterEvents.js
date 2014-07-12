@@ -29,6 +29,9 @@ var klusterEvents = {
 			klusterScene.clearClusters();
 			klusterGUI.hidePanels();
 		});
+		$('#snapshot').click(function(){
+			klusterGUI.showVideoChooser();	
+		});		
 		$('#expand').click(function( ){
 			$('#render').toggleClass('full');
         	klusterEvents.resize();
@@ -45,6 +48,10 @@ var klusterEvents = {
 		$('#close').click(function( ){
 			klusterGUI.hidePanels();
 		});
+
+		// Webcam
+		
+        if(!Modernizr.getusermedia)	$('#snapshot').hide();
 
 		// Setup file reader
 

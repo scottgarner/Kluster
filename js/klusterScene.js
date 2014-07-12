@@ -28,7 +28,7 @@ var klusterScene = {
 
 		klusterScene.renderer = new THREE.WebGLRenderer();
 		klusterScene.renderer.setSize( klusterScene.renderWidth, klusterScene.renderHeight );
-		klusterScene.renderer.setClearColorHex( 0x0c0d10, 1 );
+		klusterScene.renderer.setClearColor( 0x0c0d10, 1 );
 		klusterScene.renderer.autoClear = false;
 
 		// Controls
@@ -79,7 +79,7 @@ var klusterScene = {
 
 		var skyMesh = new THREE.Mesh( new THREE.SphereGeometry( 600, 60, 40 ), skyMaterial );
 		skyMesh.scale.x = -1;
-		klusterScene.universe.add( skyMesh );	
+		//klusterScene.universe.add( skyMesh );	
 
 	},
 
@@ -192,7 +192,7 @@ var klusterScene = {
 				clusterGeometry.vertices.push( new THREE.Vector3( x, y, z ) );	
 				clusterColors.push(pixelColor)
 				clusterAttributes.origin.value.push(new THREE.Vector3( originX, originY, originZ ) );	
-				clusterAttributes.size.value.push(8.0 + pixelColor.getHSV().s * 8.0);
+				clusterAttributes.size.value.push(8.0 + pixelColor.getHSL().s * 8.0);
 			}
 
 			// cluster Material
@@ -348,8 +348,16 @@ var klusterScene = {
 		klusterScene.composer.reset();
 
 		klusterScene.render();
-		var dataURL= klusterScene.renderer.domElement.toDataURL();
+		
+		//var dataURL= klusterScene.renderer.domElement.toDataURL();
+		console.log(klusterScene.renderer.domElement);
+		klusterScene.renderer.domElement.toBlobHD(function(blob) {
+   			saveAs(blob, "kluster.png");
+		});
+		
 		klusterEvents.resize();
+
+		/*
 
 		//take apart data URL
 		var parts = dataURL.match(/data:([^;]*)(;base64)?,([0-9A-Za-z+/]+)/);
@@ -367,6 +375,8 @@ var klusterScene = {
 		var blobURL = window.URL.createObjectURL(blob)
 
 		window.open(blobURL, "_blank", "width=1280, height=720");
+
+		*/
 
     }
 

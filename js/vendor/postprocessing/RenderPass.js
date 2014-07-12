@@ -49,3 +49,4 @@ THREE.RenderPass.prototype = {
 	}
 
 };
+
