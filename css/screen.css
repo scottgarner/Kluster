@@ -225,8 +225,8 @@ div.panel span {
 .close {
 	position:absolute;
 	cursor:pointer;
-	right:-4px;
-	top:-4px;
+	right:0;
+	top:0;
 	background: url('../assets/close.png');
 	width: 32px;
 	height: 32px;
