@@ -11,7 +11,8 @@
 		<meta name="description" content="An image visualization by Scott Garner" />
 		<meta name="author" content="Scott Garner" />
 		<meta name="keywords" content="WebGL, Three.js, Data Visualization" />
-		<meta name="copyright" content="Copyright 2012 Scott Garner" />		
+
+		<link rel="author" href="https://plus.google.com/102519483596854171931/"/>
 
 		<!-- Icon and Style -->
 		
@@ -32,7 +33,7 @@
 		<script type="text/javascript" src="js/vendor/canvas-toBlob.js"></script>		
 
 		<script type="text/javascript" src="js/vendor/three.min.js"></script>
-		<script type="text/javascript" src="js/vendor/controls/OrbitControls.js"/></script>
+		<script type="text/javascript" src="js/vendor/controls/OrbitControls.js"></script>
 		<script type="text/javascript" src="js/vendor/shaders/CopyShader.js"></script>
 		<script type="text/javascript" src="js/vendor/shaders/FilmShader.js"></script>
 		<script type="text/javascript" src="js/vendor/shaders/VignetteShader.js"></script>	
@@ -44,11 +45,11 @@
 		<script type="text/javascript" src="js/vendor/postprocessing/FilmPass.js"></script>	
 		
 
-		<script type="text/javascript" src="js/klusterPlugins.js"/></script>
-		<script type="text/javascript" src="js/klusterScene.js"/></script>
-		<script type="text/javascript" src="js/klusterShaders.js"/></script>
-		<script type="text/javascript" src="js/klusterEvents.js"/></script>
-		<script type="text/javascript" src="js/klusterGUI.js"/></script>	
+		<script type="text/javascript" src="js/klusterPlugins.js"></script>
+		<script type="text/javascript" src="js/klusterScene.js"></script>
+		<script type="text/javascript" src="js/klusterShaders.js"></script>
+		<script type="text/javascript" src="js/klusterEvents.js"></script>
+		<script type="text/javascript" src="js/klusterGUI.js"></script>	
 
 		<!-- Document ready callback -->
 
@@ -63,7 +64,6 @@
 					klusterEvents.init();
 					klusterGUI.init();
 					klusterScene.init();
-					klusterScene.animate();		
 
 				} else  {
 					$("#main").hide();
@@ -106,7 +106,7 @@
 						<i class="fa fa-fw fa-arrows-alt"></i>&emsp;<u>F</u>ULLSCREEN
 					</div>			
 					<div id="hide" class="button">
-						<i class="fa fa-fw fa-times-circle"></i>&emsp;<u>H</u>ide Controls
+						<i class="fa fa-fw fa-cog"></i>&emsp;<u>H</u>ide Controls
 					</div>				
 				</div>
 				<div id="footer">
@@ -169,6 +169,10 @@
 					<span><i class="fa fa-hand-o-up fa-fw"></i>&emsp;Drop an image into this window</span>
 				</div>
 
+				<div id="showControls">
+					<i class="fa fa-cog"></i>
+				</div>
+
 				<div id="info" class="panel">
 					<div class="close"></div>
 					<p>Kluster is a visual experiment and technology demo that uses <a href="http://en.wikipedia.org/wiki/K-means_clustering">k-means clustering</a> to create a star system from image pixels.</p>
@@ -179,9 +183,11 @@
 				</div>
 			</div>
 		</div>
+
 		<div id="error" class="panel">
 			Your browser doesn't support a feature required by Kluster. <br/>
 			Try the lateset version of <a href="http://google.com/chrome/">Chrome</a> to enjoy the full experience.	
 		</div>
+
 	</body>
 </html>

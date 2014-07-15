@@ -165,7 +165,7 @@ var klusterGUI = {
 			//klusterGUI.localMediaStream.stop();
 		}
 	},
-	
+		
 	hideControls: function() {
 		$("#render").toggleClass("full");
 		klusterEvents.resize();

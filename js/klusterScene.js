@@ -27,10 +27,16 @@ var klusterScene = {
 		klusterScene.clusters = new THREE.Object3D();
 		klusterScene.universe.add(klusterScene.clusters);
 
-		klusterScene.renderer = new THREE.WebGLRenderer();
-		klusterScene.renderer.setSize( klusterScene.renderWidth, klusterScene.renderHeight );
-		klusterScene.renderer.setClearColor( 0x0a0b0e, 1 );
-		klusterScene.renderer.autoClear = false;
+		try {
+			klusterScene.renderer = new THREE.WebGLRenderer();
+			klusterScene.renderer.setSize( klusterScene.renderWidth, klusterScene.renderHeight );
+			klusterScene.renderer.setClearColor( 0x0a0b0e, 1 );
+			klusterScene.renderer.autoClear = false;
+		} catch(e) {
+			$("#main").hide();
+			$("#error").show();
+			return -1;
+		}
 
 		// Controls
 
@@ -68,6 +74,8 @@ var klusterScene = {
 
 		$("#render").append( klusterScene.renderer.domElement );
 		$(klusterScene.renderer.domElement).bind('mousedown', klusterEvents.mouseDown); 
+
+		klusterScene.animate();
 	},
 
 	addEnvironment: function() {
@@ -216,7 +224,9 @@ var klusterScene = {
 			clusterMesh.position.copy(centroidPosition);		
 
 			clusterMesh.startTime = klusterScene.clock.getElapsedTime();	
-			clusterMesh.rotationSpeed = ((Math.random() * 8.0) - 4.0) / 1000.0;
+
+			var plusOrMinus = Math.random() < 0.5 ? -1 : 1
+			clusterMesh.rotationSpeed = ((Math.random() * 3.0) + 2.0) / 1000.0 * plusOrMinus;
 
 			// var testMesh = new THREE.Mesh( new THREE.SphereGeometry( 1, 60, 40 ), new THREE.MeshBasicMaterial( ) );
 			// groupMesh.add( testMesh );	

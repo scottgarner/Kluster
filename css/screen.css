@@ -10,7 +10,7 @@ body {
 	padding: 0;
 	overflow: hidden;
 
-	background: #111;
+	background: #000;
 	color: #ccc;
 
 	font-family: "Lato", "Helvetica Neue", "Hevetcia", sans-serif;
@@ -46,41 +46,9 @@ h1 {
 	min-height: 650px;
 }
 
-/*
-#controlBox {
-  position: fixed;
-  bottom: -1px;
-  left: 0;
-  width: 100%;
-  text-align: center;
-  z-index: 100;
-}
-
-
-#controls {
-	display: inline-block;
-	font-size: 1.5em;
-	color: rgba(128,128,128,.90);
-	background: rgba(0,0,0,.75);
-	padding: .5em;
-	border: 1px solid #666;
-	border-top-left-radius: 4px;
-	border-top-right-radius: 4px;
-}
-
-.controlButton {
-	cursor: pointer;
-	margin: 0 .5em;	
-	display: inline-block;
-}
-
-.controlButton i:hover {
-	color: #13daec;
-}
-*/
 
 #ui {
-	background: rgba(8,8,8,.75);
+	background: rgba(8,8,8,.90);
 	width: 224px;
 	height: 100%;
 	padding: 0 16px;
@@ -143,7 +111,13 @@ div.image {
 	float:left;
 	margin: 4px;
 	border: 1px solid #333;
+	opacity: .55;
 }
+
+#samples img:hover {
+	opacity: 1.0;
+}
+
 
 #kmeans {
 	position: absolute;
@@ -180,7 +154,7 @@ label {
 	background: rgba(0,0,0,.55);	
 	border: 1px solid #333;	
 	text-align: left;
-	font-size: .80em;
+	font-size: .75em;
 	margin-bottom: 4px;
 	cursor: pointer;
 	padding-left: 20%;
@@ -188,11 +162,11 @@ label {
 }
 
 .enabled i {
-	color: rgba(0,255,255,1.0);
+	color: #00C2DA;
 }
 
 .button:hover, .enabled:hover i {
-	background: rgba(0,255,255,1.0);
+	background: #00C2DA;
 	color: #000;
 }
 
@@ -232,10 +206,32 @@ label {
 	z-index: 20;
 }
 
+#showControls {
+	position: absolute;
+	left: 12px;
+	bottom: 12px;
+	font-size: 2em;
+	color: rgba(48,48,48,.50);
+	cursor:pointer;
+	display: none;
+}
+
+#showControls:hover{
+	color: #00C2DA;
+}
+
+#showControls:active {
+	color: #fff;
+}
+
+#render.full #showControls {
+	display: block;
+}
+
 div.panel {
 	display: none;
 	position: absolute;
-	background: rgba(8,8,8,.75);
+	background: rgba(8,8,8,.90);
 	padding: 24px;
 	border: 1px solid #666;	
 	font-size:1em;	
@@ -268,13 +264,11 @@ div.panel span {
 }
 
 #error {
-
-	display: none;
+	box-sizing: border-box;
 	text-align: center;
 	width: 500px;
-	height: 48px;
-	margin-top: 50%;
-	margin-left: 50%;
-	left: -264px;
-	top: -48px;
+	top: 50%;
+	left: 50%;
+	margin-left: -250px;
+	margin-top: -36px;
 }

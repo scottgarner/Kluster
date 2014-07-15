@@ -13,7 +13,7 @@ var klusterEvents = {
 
 		// Bind Events
 
-		$(document).bind('keyup', klusterEvents.keyUp);
+		$(window).bind('keyup', klusterEvents.keyUp);
 		$(window).bind('resize', klusterEvents.resize);
 
 		$(document).bind("fullscreenchange", function() {
@@ -86,6 +86,12 @@ var klusterEvents = {
 
 		$('.close').click(function( ){
 			klusterGUI.hidePanels();
+		});
+
+		// Controls
+
+		$('#showControls').click(function( ){
+			klusterGUI.hideControls();
 		});
 
 		// Webcam
