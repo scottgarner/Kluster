@@ -137,14 +137,7 @@ var klusterScene = {
 			pixelCount += groups[i].length;
 		}
 
-		// cluster Shader 
-
-		var clusterUniforms = THREE.UniformsUtils.clone( clusterShader.uniforms );
-
-		clusterUniforms["map"].value = klusterScene.starTexture;
-		clusterUniforms["scale"].value = 100;
-		clusterUniforms["opacity"].value = 1.0;
-		clusterUniforms["time"].value = 0.0		
+		// cluster Shader 	
 
 		for (var i = 0; i < centroids.length; i++) {		
 
@@ -163,6 +156,16 @@ var klusterScene = {
 				centroidLAB.a ,
 				(50-centroidLAB.l) ,
 				centroidLAB.b );
+
+			// Cluster Uniforms
+			 
+			var clusterUniforms = THREE.UniformsUtils.clone( clusterShader.uniforms );
+
+			clusterUniforms["map"].value = klusterScene.starTexture;
+			clusterUniforms["scale"].value = 100;
+			clusterUniforms["opacity"].value = 1.0;
+			clusterUniforms["time"].value = 0.0;			
+
 
 			// cluster Shader 
 
@@ -203,7 +206,8 @@ var klusterScene = {
 				
 				clusterGeometry.vertices.push( new THREE.Vector3( x, y, z ) );	
 				clusterColors.push(pixelColor)
-				clusterAttributes.origin.value.push(new THREE.Vector3( originX, originY, originZ ) );	
+				//clusterAttributes.origin.value.push(new THREE.Vector3( originX, originY, originZ ) );	// From center of universe
+				clusterAttributes.origin.value.push(centroidPosition); // From center of cluster
 				clusterAttributes.size.value.push(8.0 + pixelColor.getHSL().s * 8.0);
 				clusterAttributes.rotationSpeed.value.push( (Math.random() * 4.0) - 2.0);
 			}
@@ -225,7 +229,7 @@ var klusterScene = {
 			var clusterMesh = new THREE.ParticleSystem( clusterGeometry, clusterMaterial );
 			clusterMesh.position.copy(centroidPosition);		
 
-			clusterMesh.startTime = klusterScene.clock.getElapsedTime();	
+			clusterMesh.startTime = klusterScene.clock.getElapsedTime() + (Math.random());	
 
 			var plusOrMinus = Math.random() < 0.5 ? -1 : 1
 			clusterMesh.rotationSpeed = ((Math.random() * 3.0) + 2.0) / 1000.0 * plusOrMinus;
@@ -325,6 +329,10 @@ var klusterScene = {
 			klusterGUI.clearCanvases();
         	klusterScene.clearClusters();
         	klusterGUI.hidePanels();
+
+			klusterScene.camera.position.x = 0;
+			klusterScene.camera.position.y = 0;
+			klusterScene.camera.position.z = 200;        	
 	},
 
 	animate: function () {
@@ -348,8 +356,12 @@ var klusterScene = {
 			cluster.rotation.y += cluster.rotationSpeed;
 			
 			var clusterUniforms = cluster.material.uniforms;
-			clusterUniforms["time"].value = klusterScene.clock.getElapsedTime() - cluster.startTime;
-
+			clusterUniforms["time"].value = time - cluster.startTime;
+			
+			if (clusterUniforms["time"].value < 0) 
+				cluster.visible = false;
+		 	else
+		 		cluster.visible = true;
 		}        
 
     	// Rotate universe

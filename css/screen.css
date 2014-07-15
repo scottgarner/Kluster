@@ -88,6 +88,12 @@ div.image {
 	border: 1px solid #333;
 }
 
+#imageSelect {
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+
 #samples {
 	display: none;
 	width: 532px;

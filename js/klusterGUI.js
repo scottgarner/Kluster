@@ -71,8 +71,6 @@ var klusterGUI = {
 
 		// KMeans
 
-		console.log($('#original')[0].width);
-
 		klusterEvents.worker.postMessage({
 			'imageData': data,
 			'clusters':12,
