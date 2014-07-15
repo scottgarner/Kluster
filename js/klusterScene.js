@@ -8,6 +8,7 @@ var klusterScene = {
 	
 	clock: new THREE.Clock(),
 	autoPilotIndex: 0,
+	postProcessing: true,
 	starTexture: THREE.ImageUtils.loadTexture( "textures/sprites/particle.png" ),
 
 	init: function () {
@@ -28,7 +29,7 @@ var klusterScene = {
 
 		klusterScene.renderer = new THREE.WebGLRenderer();
 		klusterScene.renderer.setSize( klusterScene.renderWidth, klusterScene.renderHeight );
-		klusterScene.renderer.setClearColor( 0x0c0d10, 1 );
+		klusterScene.renderer.setClearColor( 0x0a0b0e, 1 );
 		klusterScene.renderer.autoClear = false;
 
 		// Controls
@@ -54,7 +55,9 @@ var klusterScene = {
 
 		klusterScene.composer.addPass( renderModel );
 		klusterScene.composer.addPass( effectFilm );
-		klusterScene.composer.addPass( effectVignette );	
+		klusterScene.composer.addPass( effectVignette );
+
+		klusterScene.composer.setSize( klusterScene.renderWidth+1, klusterScene.renderHeight );
 
 		// Add scene elements
 
@@ -64,7 +67,7 @@ var klusterScene = {
 		// Append canvas
 
 		$("#render").append( klusterScene.renderer.domElement );
-
+		$(klusterScene.renderer.domElement).bind('mousedown', klusterEvents.mouseDown); 
 	},
 
 	addEnvironment: function() {
@@ -107,7 +110,7 @@ var klusterScene = {
 		
 		var coreMaterial = new THREE.ParticleBasicMaterial( { 
 			size: 2.0,map: klusterScene.starTexture , 
-			depthTest: false,  blending: THREE.AdditiveBlending, 
+			depthTest: false, depthWrite: false, blending: THREE.AdditiveBlending, 
 			transparent : true, vertexColors: true} );
 
 		var coreParticles = new THREE.ParticleSystem( coreGeometry, coreMaterial );
@@ -204,7 +207,7 @@ var klusterScene = {
 				fragmentShader: clusterShader.fragmentShader,
 				vertexColors: true,
 				blending: THREE.AdditiveBlending, transparent:true,
-				depthTest: false
+				depthTest: false, depthWrite: false
 			});				
 
 			// cluster Mesh
@@ -213,6 +216,7 @@ var klusterScene = {
 			clusterMesh.position.copy(centroidPosition);		
 
 			clusterMesh.startTime = klusterScene.clock.getElapsedTime();	
+			clusterMesh.rotationSpeed = ((Math.random() * 8.0) - 4.0) / 1000.0;
 
 			// var testMesh = new THREE.Mesh( new THREE.SphereGeometry( 1, 60, 40 ), new THREE.MeshBasicMaterial( ) );
 			// groupMesh.add( testMesh );	
@@ -299,6 +303,13 @@ var klusterScene = {
 		return previousTarget;		
 	},
 
+	reset: function() {
+			klusterScene.autoPilotStop();
+			klusterGUI.clearCanvases();
+        	klusterScene.clearClusters();
+        	klusterGUI.hidePanels();
+	},
+
 	animate: function () {
 
         requestAnimationFrame( klusterScene.animate );
@@ -317,7 +328,7 @@ var klusterScene = {
 		for ( var i = 0; i < klusterScene.clusters.children.length; i ++ ) {
 
 			var cluster = klusterScene.clusters.children[ i ];
-			cluster.rotation.y += 0.003;
+			cluster.rotation.y += cluster.rotationSpeed;
 			
 			var clusterUniforms = cluster.material.uniforms;
 			clusterUniforms["time"].value = klusterScene.clock.getElapsedTime() - cluster.startTime;
@@ -335,9 +346,12 @@ var klusterScene = {
     },
 
     render: function() {
-		klusterScene.renderer.clear();
-		klusterScene.composer.render( 0.01 );    	
-    	//klusterScene.renderer.render( klusterScene.scene, klusterScene.camera );
+    	if (klusterScene.postProcessing) {
+			klusterScene.renderer.clear();
+			klusterScene.composer.render( 0.01 );    	
+		}  else {
+    		klusterScene.renderer.render( klusterScene.scene, klusterScene.camera );
+    	}
     },
 
     saveImage: function() {
@@ -345,12 +359,11 @@ var klusterScene = {
 		klusterScene.camera.aspect = 1920 / 1080;
 		klusterScene.camera.updateProjectionMatrix();
 		klusterScene.renderer.setSize( 1920,1080);
-		klusterScene.composer.reset();
+		klusterScene.composer.setSize( 1921,1080);
 
 		klusterScene.render();
 		
 		//var dataURL= klusterScene.renderer.domElement.toDataURL();
-		console.log(klusterScene.renderer.domElement);
 		klusterScene.renderer.domElement.toBlobHD(function(blob) {
    			saveAs(blob, "kluster.png");
 		});

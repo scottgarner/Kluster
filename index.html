@@ -18,11 +18,14 @@
 		<link rel="icon" type="image/png" href="assets/favicon.png" />
 		<link rel="stylesheet" type="text/css" href="css/screen.css"/>
 		<link href='http://fonts.googleapis.com/css?family=Lato:300,400' rel='stylesheet' type='text/css'>
+
+		<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 		
 		<!-- So much javascript -->
 
 		<script type="text/javascript" src="js/vendor/jquery.min.js"></script>
 		<script type="text/javascript" src="js/vendor/jquery.mousewheel.min.js"></script>
+		<script type="text/javascript" src="js/vendor/jquery.fullscreen-min.js"></script>
 		<script type="text/javascript" src="js/vendor/modernizr.min.js"></script>		
 		<script type="text/javascript" src="js/vendor/tween.min.js"></script>
 		<script type="text/javascript" src="js/vendor/FileSaver.js"></script>		
@@ -72,34 +75,102 @@
 	</head>
 	<body>
 		<div id="main">
+
 			<div id="ui">
-				<h1>Kluster</h1>
+				<h1 class="title">Kluster</h1>
 				<div id="images">
 					<label>Original Image</label>
 					<div class="image">
 						<canvas id="original" width="200" height="200"></canvas>
-						<video id="webcam" autoplay></video>
 					</div>
-					<label>K-Means Palette</label>
-					<div class="image"><canvas id="kmeans" width="200" height="200"></canvas></div>
+					<label id="kmeansLabel">Clustered Pixels</label>
+					<div id="kmeansImage" class="image"><canvas id="kmeans" width="200" height="200"></canvas></div>
 					<label>Controls</label>
-					<div id="expand" class="button">Expand</div>
-					<div id="auto" class="button">Autopilot</div>
-					<div id="reset" class="button">Reset</div>
-					<div id="snapshot" class="button">Webcam</div>
-					<div id="save" class="button">Save</div>
-					<div id="about" class="button">About</div>
+					<div id="snapshot" class="button">
+						<i class="fa fa-fw fa-image"></i>&emsp;<u>N</u>ew Image
+					</div>									
+					<div id="reset" class="button">
+						<i class="fa fa-fw fa-refresh"></i>&emsp;<u>R</u>eset
+					</div>
+					<div id="save" class="button">
+						<i class="fa fa-fw fa-download"></i>&emsp;<u>S</u>napshot
+					</div>
+					<div id="about" class="button">
+						<i class="fa fa-fw fa-info-circle"></i>&emsp;<u>I</u>nformation
+					</div>
+					<label>Toggles</label>
+					<div id="auto" class="button">
+						<i class="fa fa-fw fa-paper-plane"></i>&emsp;<u>A</u>UTOPILOT
+					</div>	
+					<div id="expand" class="button">
+						<i class="fa fa-fw fa-arrows-alt"></i>&emsp;<u>F</u>ULLSCREEN
+					</div>			
+					<div id="hide" class="button">
+						<i class="fa fa-fw fa-times-circle"></i>&emsp;<u>H</u>ide Controls
+					</div>				
 				</div>
 				<div id="footer">
-					Kluster v001 &bull; <a href="http://scott.j38.net">Scott Made This</a>
+					Kluster v002 &bull; <a href="http://scott.j38.net">Scott Made This</a>
 				</div>
 				
 			</div>
 
+			<input type="file" id="imageSelect" />
+
+
 			<div id="render">
+				<!--
 				<div id="welcome" class="panel">Drag and drop an image to begin</div>
+				-->
+				
+				<div id="chooseImage" class="panel">
+					<div class="close"></div>
+					<label>Choose an image to begin</label>
+					<div class="button" id="imageDisk"><i class="fa fa-fw fa-upload"></i>&emsp;Select From Disk</div>
+					<div class="button" id="imageWebcam"><i class="fa fa-fw fa-video-camera"></i>&emsp;Webcam Snapshot</div>
+					<div class="button" id="imageSample"><i class="fa fa-fw fa-image"></i>&emsp;Sample Image</div>
+					<div class="button" id="imageDragDrop"><i class="fa fa-fw fa-hand-o-up "></i>&emsp;Drag and Drop</div>
+				</div>				
+
+				<div id="webcamPermission" class="panel">
+					<span><i class="fa fa-check-circle-o"></i>&emsp;Please allow webcam access.</span>
+				</div>
+
+				<div id="webcamDenied" class="panel">
+					<div class="close"></div>
+					<span><i class="fa fa-times-circle-o"></i>&emsp;You have denied access to the webcam.</span>
+				</div>				
+
+				<div id="webcam" class="panel">
+					<div class="close"></div>
+					<video id="webcamFeed" autoplay></video>
+					<div class="button" id="webcamSnapshot"><i class="fa fa-fw fa-flash"></i>&emsp;Take Snapshot</div>
+				</div>				
+
+				<div id="samples" class="panel">
+					<div class="close"></div>
+					<label>CHOOSE AN IMAGE</label>
+					<img src="/assets/sample_1.jpg" alt="" width="256" height="144"/>
+					<img src="/assets/sample_2.jpg" alt="" width="256" height="144"/>
+					<img src="/assets/sample_3.jpg" alt="" width="256" height="144"/>
+					<img src="/assets/sample_4.jpg" alt="" width="256" height="144"/>
+				</div>
+
+				<div id="loading" class="panel">
+					<span><i class="fa fa-cog fa-spin"></i>&emsp;Processing Image</span>
+				</div>
+
+				<div id="waiting" class="panel">
+					<span><i class="fa fa-cog fa-spin"></i>&emsp;Waiting For Data</span>
+				</div>				
+
+				<div id="dragDrop" class="panel">
+					<div class="close"></div>
+					<span><i class="fa fa-hand-o-up fa-fw"></i>&emsp;Drop an image into this window</span>
+				</div>
+
 				<div id="info" class="panel">
-					<div id="close"></div>
+					<div class="close"></div>
 					<p>Kluster is a visual experiment and technology demo that uses <a href="http://en.wikipedia.org/wiki/K-means_clustering">k-means clustering</a> to create a star system from image pixels.</p>
 
 					<p>It was created by <a href="http://scott.j38.net/">Scott Garner</a> for <a href="http://makematics.com/">Makematics</a> at <a href="http://itp.nyu.edu/">ITP</a>.

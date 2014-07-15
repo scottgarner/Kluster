@@ -36,16 +36,51 @@ h1 {
 	text-transform: uppercase;
 	margin-top: 0;
 	padding-top: 24px;
+	z-index: 50;
 }
 
 
 #main {
 	width: 100%;
 	height: 100%;
+	min-height: 650px;
 }
 
+/*
+#controlBox {
+  position: fixed;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  z-index: 100;
+}
+
+
+#controls {
+	display: inline-block;
+	font-size: 1.5em;
+	color: rgba(128,128,128,.90);
+	background: rgba(0,0,0,.75);
+	padding: .5em;
+	border: 1px solid #666;
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+}
+
+.controlButton {
+	cursor: pointer;
+	margin: 0 .5em;	
+	display: inline-block;
+}
+
+.controlButton i:hover {
+	color: #13daec;
+}
+*/
+
 #ui {
-	background: #111;
+	background: rgba(0,0,0,.75);
 	width: 224px;
 	height: 100%;
 	padding: 0 16px;
@@ -80,11 +115,6 @@ div.image {
 #webcam {
 	position: absolute;
 
-	height: 112px;
-	width: 200px;
-	max-width: 200px;
-	max-height: 112px;
-
 	top: 50%;
 	left: 50%;
 
@@ -93,6 +123,25 @@ div.image {
 	
 	z-index:10;
 	display:none;
+}
+
+#webcamFeed {
+
+	max-width: 320px;
+	border: 1px solid #333;
+}
+
+#samples {
+	display: none;
+	width: 532px;
+}
+
+#samples img {
+	cursor: pointer;
+	margin: 0;
+	padding: 0;
+	float:left;
+	margin: 4px;
 }
 
 #kmeans {
@@ -117,26 +166,34 @@ label {
 	color: #999;
 }
 
+.panel label {
+	display: block;
+	font-size: .85em;
+	margin-bottom: 8px;
+}
+
 .button {
+	box-sizing: border-box;
 	color: #999;
 	display: block;
-	background: rgba(0,0,0,.35);	
-	width: 224px;	
+	background: rgba(0,0,0,.55);	
 	border: 1px solid #333;	
-	text-align: center;
-	font-size: .9em;
+	text-align: left;
+	font-size: .85em;
 	margin-bottom: 4px;
 	cursor: pointer;
+	padding-left: 32px;
+	text-transform: uppercase;
 }
 
 .button:hover {
-	background: rgba(32,32,32,1);
-	color: #ccc;
+	background: #13daec;
+	color: #000;
 }
 
 .button:active {
-	background: #444;
-	color: #fff;
+	background: #fff;
+	color: #000;
 }
 
 #footer {
@@ -162,6 +219,7 @@ label {
 	left: 256px;
 	bottom: 0;
 	z-index: 0;
+	min-width: 640px;
 }
 
 #render.full {
@@ -170,19 +228,25 @@ label {
 }
 
 div.panel {
+	display: none;
 	position: absolute;
-	background: rgba(24,24,24,.90);
+	background: rgba(0,0,0,.85);
 	padding: 24px;
-	border: 1px solid #333;	
+	border: 1px solid #666;	
 	font-size:1em;	
 	z-index: 30;
 }
 
-#close {
+div.panel span {
+	text-transform: uppercase;
+	font-size: .85em;
+}
+
+.close {
 	position:absolute;
 	cursor:pointer;
-	right:0;
-	top:0;
+	right:-4px;
+	top:-4px;
 	background: url('../assets/close.png');
 	width: 32px;
 	height: 32px;
@@ -193,11 +257,9 @@ div.panel {
 	width: 430px;
 }
 
-#welcome {
+#chooseImage {
 	display: none;
-	text-transform: uppercase;
-	text-align: center;
-	width: 360px;
+	width: 256px;
 }
 
 #error {
