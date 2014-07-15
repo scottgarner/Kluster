@@ -251,6 +251,8 @@ var klusterScene = {
 
 	autoPilotStart: function () {
 
+		$("#auto").addClass("enabled");
+
 		var previousTarget = klusterScene.clusters.children[klusterScene.previousTarget()];
 		var currentTarget = klusterScene.clusters.children[ klusterScene.autoPilotIndex ];
 		var nextTarget = klusterScene.clusters.children[ klusterScene.nextTarget() ];
@@ -279,6 +281,9 @@ var klusterScene = {
 	},
 
 	autoPilotStop: function() {
+
+		$("#auto").removeClass("enabled");
+
 		if (klusterScene.autoPilotTween != null) {
 			klusterScene.autoPilotTween.stop();
 			klusterScene.autoPilotTween = null;

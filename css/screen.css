@@ -80,7 +80,7 @@ h1 {
 */
 
 #ui {
-	background: rgba(0,0,0,.75);
+	background: rgba(8,8,8,.75);
 	width: 224px;
 	height: 100%;
 	padding: 0 16px;
@@ -142,6 +142,7 @@ div.image {
 	padding: 0;
 	float:left;
 	margin: 4px;
+	border: 1px solid #333;
 }
 
 #kmeans {
@@ -179,19 +180,23 @@ label {
 	background: rgba(0,0,0,.55);	
 	border: 1px solid #333;	
 	text-align: left;
-	font-size: .85em;
+	font-size: .80em;
 	margin-bottom: 4px;
 	cursor: pointer;
-	padding-left: 32px;
+	padding-left: 20%;
 	text-transform: uppercase;
 }
 
-.button:hover {
-	background: #13daec;
+.enabled i {
+	color: rgba(0,255,255,1.0);
+}
+
+.button:hover, .enabled:hover i {
+	background: rgba(0,255,255,1.0);
 	color: #000;
 }
 
-.button:active {
+.button:active, .enabled:active i {
 	background: #fff;
 	color: #000;
 }
@@ -230,7 +235,7 @@ label {
 div.panel {
 	display: none;
 	position: absolute;
-	background: rgba(0,0,0,.85);
+	background: rgba(8,8,8,.75);
 	padding: 24px;
 	border: 1px solid #666;	
 	font-size:1em;	

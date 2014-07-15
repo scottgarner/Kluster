@@ -16,6 +16,13 @@ var klusterEvents = {
 		$(document).bind('keyup', klusterEvents.keyUp);
 		$(window).bind('resize', klusterEvents.resize);
 
+		$(document).bind("fullscreenchange", function() {
+		    if($(document).fullScreen())
+		    	$("#expand").addClass("enabled");
+		    else
+		    	$("#expand").removeClass("enabled");
+		});		
+
 		$('#main').bind('dragenter', klusterEvents.ignoreEvent); 
 		$('#main').bind('dragover', klusterEvents.ignoreEvent); 
 		$('#main').bind('dragleave', klusterEvents.ignoreEvent); 
