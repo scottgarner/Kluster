@@ -168,6 +168,7 @@ var klusterScene = {
 
 	        var clusterAttributes = {
 	                size: { type: 'f', value: [] },
+	                rotationSpeed: { type: 'f', value: [] },
 	                origin: { type: 'v3', value: [] },
 	        };				
 
@@ -204,6 +205,7 @@ var klusterScene = {
 				clusterColors.push(pixelColor)
 				clusterAttributes.origin.value.push(new THREE.Vector3( originX, originY, originZ ) );	
 				clusterAttributes.size.value.push(8.0 + pixelColor.getHSL().s * 8.0);
+				clusterAttributes.rotationSpeed.value.push( (Math.random() * 4.0) - 2.0);
 			}
 
 			// cluster Material

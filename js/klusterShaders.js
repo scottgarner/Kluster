@@ -9,10 +9,12 @@
     vertexShader: [
         "attribute vec3 origin; ",
         "attribute float size; ",
+        "attribute float rotationSpeed; ",
         "uniform float time;",
         "uniform float scale; ",
         "uniform float amount; ",
         "varying vec3 vColor;",
+        "varying float vRotation;",
 
         "mat4 rotate_y(float theta)",
         "{",
@@ -26,7 +28,8 @@
 
         "void main() {",
 
-        "   vColor = color;",        
+        "   vColor = color;",   
+        "   vRotation = time * rotationSpeed;",    
         "   float amount = (time > size/2.0) ? 1.0 : 1.0 - pow(1.0 - (time / (size/2.0)), 5.0);",
         "   vec4 worldZero =  viewMatrix * vec4( origin ,1.0);",
         //"   vec4 mvPosition = modelViewMatrix * (vec4(position, 1.0) * rotate_y(time / length(position) * 2.0) ) ;",
@@ -43,11 +46,14 @@
         "uniform vec3 psColor;",
         "uniform float opacity;",
         "varying vec3 vColor;",
+        "varying float vRotation;",
         "uniform sampler2D map;",
         
         "void main() {",
+    	"	float mid = 0.5;",
+        "	vec2 rotated = vec2(cos(vRotation) * (gl_PointCoord.x - mid) + sin(vRotation) * (gl_PointCoord.y - mid) + mid, cos(vRotation) * (gl_PointCoord.y - mid) - sin(vRotation) * (gl_PointCoord.x - mid) + mid);",
         "   gl_FragColor = vec4( psColor, opacity );",
-        "   gl_FragColor = gl_FragColor * texture2D( map, vec2( gl_PointCoord.x, 1.0 - gl_PointCoord.y ) );",
+        "   gl_FragColor = gl_FragColor * texture2D( map, rotated);",
         "   gl_FragColor = gl_FragColor * vec4( vColor, opacity );",
 
         "}",

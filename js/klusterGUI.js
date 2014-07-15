@@ -54,7 +54,7 @@ var klusterGUI = {
 		context.drawImage(image, 0, 0, $('#original')[0].width, $('#original')[0].height);
 
 		$('#original').css('width',$('#original').height()* aspect);
-		$('#original').css('margin-left', - $('#original').width() / 2);
+		//$('#original').css('margin-left', - $('#original').width() / 2);
 		
 		klusterGUI.calculateKMeans();
 	},
@@ -66,10 +66,12 @@ var klusterGUI = {
 		// Prepare canvas
 
 		var context = $('#original')[0].getContext('2d');
-		var imageData = context.getImageData(0, 0, $('#original')[0].width, $('#original')[0].width);
+		var imageData = context.getImageData(0, 0, $('#original')[0].width, $('#original')[0].height);
 		var data = imageData.data;
 
 		// KMeans
+
+		console.log($('#original')[0].width);
 
 		klusterEvents.worker.postMessage({
 			'imageData': data,
@@ -86,7 +88,7 @@ var klusterGUI = {
 		var centroids = clusters.centroids;
 		
 		var context = $('#kmeans')[0].getContext('2d');	
-		var imageData = context.getImageData(0, 0, $('#kmeans')[0].width, $('#kmeans')[0].width);
+		var imageData = context.getImageData(0, 0, $('#kmeans')[0].width, $('#kmeans')[0].height);
 		var data = imageData.data;
 
 		var k = 0;
@@ -108,7 +110,7 @@ var klusterGUI = {
 		context.putImageData(imageData, 0,0);
 
 		$('#kmeans').css('width',$('#original').width());
-		$('#kmeans').css('margin-left', parseInt($('#original').css('margin-left')));
+		//$('#kmeans').css('margin-left', parseInt($('#original').css('margin-left')));
 
 		// Add to 3D Scene
 
@@ -159,13 +161,13 @@ var klusterGUI = {
 			context.drawImage($("#webcamFeed")[0], 0, 0, $('#original')[0].width, $('#original')[0].height);
 
 			$('#original').css('width',$('#original').height()* aspect);
-			$('#original').css('margin-left', - $('#original').width() / 2);
+			//$('#original').css('margin-left', - $('#original').width() / 2);
 				
 			klusterGUI.calculateKMeans();
 			//klusterGUI.localMediaStream.stop();
 		}
 	},
-		
+
 	hideControls: function() {
 		$("#render").toggleClass("full");
 		klusterEvents.resize();

@@ -48,49 +48,38 @@ h1 {
 
 
 #ui {
+	position: absolute;
+	width: 178px;
+	top: 0;
+	bottom: 0;	
+
 	background: rgba(8,8,8,.90);
-	width: 224px;
-	height: 100%;
 	padding: 0 16px;
-	position: relative;
 	z-index: 10;
 	border-right: 1px solid #666;
 	/*box-shadow: inset -10px 0 5px -5px hsla(0,0%,0%,.45);*/
 }
 
 div.image {
+	box-sizing: border-box;	
 	position: relative;
 	background: rgba(0,0,0,.35);
 	border: 1px solid #333;
-	height: 136px;
+	width: 100%;
+	text-align: center;
+	padding: 8px;
+	line-height: 0;
 }
 
-#original {
-	position: absolute;
-
-	height: 112px;
-	width: 200px;
-	max-width: 200px;
-	max-height: 112px;
-
-	top: 50%;
-	left: 50%;
-
-	margin-left: -100px;
-	margin-top: -56px;	
+#original, #kmeans {
+	height: 90px;
+	width: 160px;
+	max-height: 90px;	
+	max-width: 160px;
 }
 
 #webcam {
-	position: absolute;
-
-	top: 50%;
-	left: 50%;
-
-	margin-left: -100px;
-	margin-top: -56px;	
-	
-	z-index:10;
-	display:none;
+	display: none;
 }
 
 #webcamFeed {
@@ -117,22 +106,6 @@ div.image {
 #samples img:hover {
 	opacity: 1.0;
 }
-
-
-#kmeans {
-	position: absolute;
-	
-	height: 112px;
-	width: 200px;
-	max-width: 200px;
-	max-height: 112px;
-
-	top: 50%;
-	left: 50%;
-
-	margin-left: -100px;
-	margin-top: -56px;	
-}	
 
 label {
 	margin:0;
@@ -176,7 +149,7 @@ label {
 }
 
 #footer {
-	width: 224px;
+	width: 178px;
 	position: absolute;
 	bottom: 24px;
 	font-size: .65em;
@@ -195,7 +168,7 @@ label {
 	background: #000;
 	top: 0;
 	right: 0;
-	left: 256px;
+	left: 211px;
 	bottom: 0;
 	z-index: 0;
 	min-width: 640px;
