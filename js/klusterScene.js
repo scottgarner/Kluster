@@ -40,7 +40,7 @@ var klusterScene = {
 
 		// Controls
 
-		klusterScene.controls = new THREE.OrbitControls( klusterScene.camera );
+		klusterScene.controls = new THREE.OrbitControls( klusterScene.camera, klusterScene.renderer.domElement );
 		klusterScene.controls.maxDistance = 400;
 		klusterScene.controls.minPolarAngle = Math.PI * .2;
 		klusterScene.controls.maxPolarAngle = Math.PI * .8;		

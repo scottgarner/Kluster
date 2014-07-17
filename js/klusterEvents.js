@@ -94,10 +94,6 @@ var klusterEvents = {
 			klusterGUI.hideControls();
 		});
 
-		// Webcam
-		
-        if(!Modernizr.getusermedia)	$('#imageWebcam').hide();
-
 		// Setup file reader
 
 		klusterEvents.reader = new FileReader(); 

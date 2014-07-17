@@ -1,79 +1,34 @@
 <!DOCTYPE html>
-<html>
-	<head>
+<html class="no-js">
+    <head>
 
-		<title>Kluster</title>
+        <title>Kluster</title>
 
-		<!-- Meta -->
-
-		<meta charset="utf-8" />
-		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <!-- Meta -->
+		
+		<meta charset="utf-8">
 		<meta name="description" content="An image visualization by Scott Garner" />
 		<meta name="author" content="Scott Garner" />
 		<meta name="keywords" content="WebGL, Three.js, Data Visualization" />
 
-		<link rel="author" href="https://plus.google.com/102519483596854171931/"/>
-
+        <link rel="author" href="https://plus.google.com/102519483596854171931/"/>
+		
 		<!-- Icon and Style -->
 		
+		<link rel="apple-touch-icon icon-precomposed" href="assets/touchicon.png"/>
 		<link rel="icon" type="image/png" href="assets/favicon.png" />
 		<link rel="stylesheet" type="text/css" href="css/screen.css"/>
 		<link href='http://fonts.googleapis.com/css?family=Lato:300,400' rel='stylesheet' type='text/css'>
 
 		<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
-		
-		<!-- So much javascript -->
 
-		<script type="text/javascript" src="js/vendor/jquery.min.js"></script>
-		<script type="text/javascript" src="js/vendor/jquery.mousewheel.min.js"></script>
-		<script type="text/javascript" src="js/vendor/jquery.fullscreen-min.js"></script>
-		<script type="text/javascript" src="js/vendor/modernizr.min.js"></script>		
-		<script type="text/javascript" src="js/vendor/tween.min.js"></script>
-		<script type="text/javascript" src="js/vendor/FileSaver.js"></script>		
-		<script type="text/javascript" src="js/vendor/canvas-toBlob.js"></script>		
+		<!-- Modernizr -->
 
-		<script type="text/javascript" src="js/vendor/three.min.js"></script>
-		<script type="text/javascript" src="js/vendor/controls/OrbitControls.js"></script>
-		<script type="text/javascript" src="js/vendor/shaders/CopyShader.js"></script>
-		<script type="text/javascript" src="js/vendor/shaders/FilmShader.js"></script>
-		<script type="text/javascript" src="js/vendor/shaders/VignetteShader.js"></script>	
+        <script type="text/javascript" src="js/vendor/modernizr.min.js"></script>		
 
-		<script type="text/javascript" src="js/vendor/postprocessing/EffectComposer.js"></script>
-		<script type="text/javascript" src="js/vendor/postprocessing/MaskPass.js"></script>
-		<script type="text/javascript" src="js/vendor/postprocessing/RenderPass.js"></script>
-		<script type="text/javascript" src="js/vendor/postprocessing/ShaderPass.js"></script>
-		<script type="text/javascript" src="js/vendor/postprocessing/FilmPass.js"></script>	
-		
+    </head>
+    <body>
 
-		<script type="text/javascript" src="js/klusterPlugins.js"></script>
-		<script type="text/javascript" src="js/klusterScene.js"></script>
-		<script type="text/javascript" src="js/klusterShaders.js"></script>
-		<script type="text/javascript" src="js/klusterEvents.js"></script>
-		<script type="text/javascript" src="js/klusterGUI.js"></script>	
-
-		<!-- Document ready callback -->
-
-		<script type="text/javascript">
-
-
-			$("document").ready( function() { 
-
-				if (Modernizr.webgl && Modernizr.filereader &&
-					Modernizr.draganddrop && Modernizr.webworkers) {
-
-					klusterEvents.init();
-					klusterGUI.init();
-					klusterScene.init();
-
-				} else  {
-					$("#main").hide();
-					$("#error").show();
-				}
-			} );
-
-		</script>
-	</head>
-	<body>
 		<div id="main">
 
 			<div id="ui">
@@ -113,7 +68,7 @@
 				
 			</div>
 
-			<input type="file" id="imageSelect" />
+			<input type="file" id="imageSelect"  accept="image/*" />
 
 
 			<div id="render">
@@ -124,19 +79,19 @@
 				<div id="chooseImage" class="panel">
 					<div class="close"></div>
 					<label>Choose an image to begin</label>
-					<div class="button" id="imageDisk"><i class="fa fa-fw fa-upload"></i>&emsp;Select From Disk</div>
+					<div class="button" id="imageDisk"><i class="fa fa-fw fa-upload"></i>&emsp;Select From Device</div>
 					<div class="button" id="imageWebcam"><i class="fa fa-fw fa-video-camera"></i>&emsp;Webcam Snapshot</div>
 					<div class="button" id="imageSample"><i class="fa fa-fw fa-image"></i>&emsp;Sample Image</div>
 					<div class="button" id="imageDragDrop"><i class="fa fa-fw fa-hand-o-up "></i>&emsp;Drag and Drop</div>
 				</div>				
 
 				<div id="webcamPermission" class="panel">
-					<span><i class="fa fa-check-circle-o"></i>&emsp;Please allow webcam access.</span>
+					<span><i class="fa fa-video-camera"></i>&emsp;Please allow webcam access.</span>
 				</div>
 
 				<div id="webcamDenied" class="panel">
 					<div class="close"></div>
-					<span><i class="fa fa-times-circle-o"></i>&emsp;You have denied access to the webcam.</span>
+					<span><i class="fa fa-video-camera"></i>&emsp;You have denied access to the webcam.</span>
 				</div>				
 
 				<div id="webcam" class="panel">
@@ -164,7 +119,7 @@
 
 				<div id="dragDrop" class="panel">
 					<div class="close"></div>
-					<span><i class="fa fa-hand-o-up fa-fw"></i>&emsp;Drop an image into this window</span>
+					<span><i class="fa fa-hand-o-up fa-fw"></i>&emsp;Drop an image into this window&emsp;</span>
 				</div>
 
 				<div id="showControls">
@@ -173,11 +128,13 @@
 
 				<div id="info" class="panel">
 					<div class="close"></div>
-					<p>Kluster is a visual experiment and technology demo that uses <a href="http://en.wikipedia.org/wiki/K-means_clustering">k-means clustering</a> to create a star system from image pixels.</p>
+					<p>Kluster is a visual experiment and technology demo that uses <a href="http://en.wikipedia.org/wiki/K-means_clustering">k-means clustering</a> to create a star system from image pixels. More info can be found <a href="http://scott.j38.net/interactive/kluster/">here</a>. Source files available on <a href="https://github.com/scottgarner/Kluster">GitHub</a>.</p>
 
-					<p>It was created by <a href="http://scott.j38.net/">Scott Garner</a> for <a href="http://makematics.com/">Makematics</a> at <a href="http://itp.nyu.edu/">ITP</a>.
+					<p>No personal information or images are transfered to or stored on remote servers. All processing happens locally.</p>
 
-					<p>More information on Kluster can be found <a href="http://scott.j38.net/interactive/kluster/">here</a>. Source files are available on <a href="https://github.com/scottgarner/Kluster">GitHub</a>.</p>
+					<p>Kluster was created by <a href="http://scott.j38.net/">Scott Garner</a> for <a href="http://makematics.com/">Makematics</a> at <a href="http://itp.nyu.edu/">ITP</a>. <a href="http://twitter.com/scottgarner/">Follow Scott</a> on Twitter for more projects and experiments.
+
+					<p>
 				</div>
 			</div>
 		</div>
@@ -187,5 +144,63 @@
 			Try the lateset version of <a href="http://google.com/chrome/">Chrome</a> to enjoy the full experience.	
 		</div>
 
-	</body>
+		<!-- Javascript -->
+
+		<script type="text/javascript" src="js/vendor/jquery.min.js"></script>
+		<script type="text/javascript" src="js/vendor/jquery.mousewheel.min.js"></script>
+		<script type="text/javascript" src="js/vendor/jquery.fullscreen-min.js"></script>
+		<script type="text/javascript" src="js/vendor/tween.min.js"></script>
+		<script type="text/javascript" src="js/vendor/FileSaver.js"></script>		
+		<script type="text/javascript" src="js/vendor/canvas-toBlob.js"></script>		
+
+		<script type="text/javascript" src="js/vendor/three.min.js"></script>
+		<script type="text/javascript" src="js/vendor/controls/OrbitControls.js"></script>
+		<script type="text/javascript" src="js/vendor/shaders/CopyShader.js"></script>
+		<script type="text/javascript" src="js/vendor/shaders/FilmShader.js"></script>
+		<script type="text/javascript" src="js/vendor/shaders/VignetteShader.js"></script>	
+
+		<script type="text/javascript" src="js/vendor/postprocessing/EffectComposer.js"></script>
+		<script type="text/javascript" src="js/vendor/postprocessing/MaskPass.js"></script>
+		<script type="text/javascript" src="js/vendor/postprocessing/RenderPass.js"></script>
+		<script type="text/javascript" src="js/vendor/postprocessing/ShaderPass.js"></script>
+		<script type="text/javascript" src="js/vendor/postprocessing/FilmPass.js"></script>			
+
+		<script type="text/javascript" src="js/klusterPlugins.js"></script>
+		<script type="text/javascript" src="js/klusterScene.js"></script>
+		<script type="text/javascript" src="js/klusterShaders.js"></script>
+		<script type="text/javascript" src="js/klusterEvents.js"></script>
+		<script type="text/javascript" src="js/klusterGUI.js"></script>	
+
+		<script type="text/javascript">
+
+			$("document").ready( function() { 
+
+				if (Modernizr.webgl && Modernizr.webworkers) {
+
+					klusterEvents.init();
+					klusterGUI.init();
+					klusterScene.init();
+
+				} else  {
+					$("#main").hide();
+					$("#error").show();
+				}
+			} );
+
+		</script>		
+
+        <!-- Google Analytics -->
+
+		<script>
+		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		  ga('create', 'UA-457687-8', 'auto');
+		  ga('send', 'pageview');
+
+		</script>
+
+    </body>
 </html>

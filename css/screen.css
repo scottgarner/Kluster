@@ -52,6 +52,7 @@ h1 {
 	width: 178px;
 	top: 0;
 	bottom: 0;	
+	min-height: 650px;
 
 	background: rgba(8,8,8,.90);
 	padding: 0 16px;
@@ -94,6 +95,16 @@ div.image {
 	right: 0;
 }
 
+.no-getusermedia #imageWebcam {
+	display: none;
+}
+
+.no-fullscreen #expand, .no-fullscreen #imageDragDrop {
+	display: none;
+}
+
+
+
 #samples {
 	display: none;
 	width: 532px;
@@ -122,7 +133,7 @@ label {
 
 .panel label {
 	display: block;
-	font-size: .85em;
+	font-size: .80em;
 	margin-bottom: 8px;
 }
 
@@ -152,6 +163,11 @@ label {
 .button:active, .enabled:active i {
 	background: #fff;
 	color: #000;
+}
+
+#webcamSnapshot.button {
+	padding-left: 0;
+	text-align: center;
 }
 
 #footer {
