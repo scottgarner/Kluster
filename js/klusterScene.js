@@ -172,7 +172,6 @@ var klusterScene = {
 	        var clusterAttributes = {
 	                size: { type: 'f', value: [] },
 	                rotationSpeed: { type: 'f', value: [] },
-	                origin: { type: 'v3', value: [] },
 	        };				
 
 			// cluster Geometry
@@ -200,14 +199,14 @@ var klusterScene = {
 				var z = radius * Math.sin(longitude) * Math.sin(latitude);
 				var y = radius * Math.cos(latitude) ; 
 
-				var originX = 0; //(100 - group[j][3]) / 1.0;
-				var originY = 0; //(100 - group[j][4]) / 1.0;
-				var originZ = 0;				
+				//var originX = 0; //(100 - group[j][3]) / 1.0;
+				//var originY = 0; //(100 - group[j][4]) / 1.0;
+				//var originZ = 0;				
 				
 				clusterGeometry.vertices.push( new THREE.Vector3( x, y, z ) );	
 				clusterColors.push(pixelColor)
 				//clusterAttributes.origin.value.push(new THREE.Vector3( originX, originY, originZ ) );	// From center of universe
-				clusterAttributes.origin.value.push(centroidPosition); // From center of cluster
+				//clusterAttributes.origin.value.push(centroidPosition); // From center of cluster
 				clusterAttributes.size.value.push(8.0 + pixelColor.getHSL().s * 8.0);
 				clusterAttributes.rotationSpeed.value.push( (Math.random() * 4.0) - 2.0);
 			}

@@ -7,7 +7,6 @@
 
     ] ),
     vertexShader: [
-        "attribute vec3 origin; ",
         "attribute float size; ",
         "attribute float rotationSpeed; ",
         "uniform float time;",
@@ -31,7 +30,7 @@
         "   vColor = color;",   
         "   vRotation = time * rotationSpeed;",    
         "   float amount = (time > size/2.0) ? 1.0 : 1.0 - pow(1.0 - (time / (size/2.0)), 5.0);",
-        "   vec4 worldZero =  viewMatrix * vec4( origin ,1.0);",
+        "   vec4 worldZero =  modelViewMatrix * vec4( 0.0,0.0,0.0 ,1.0);",
         //"   vec4 mvPosition = modelViewMatrix * (vec4(position, 1.0) * rotate_y(time / length(position) * 2.0) ) ;",
         "   vec4 mvPosition = modelViewMatrix * (vec4(position, 1.0) ) ;",
         "   vec4 lerpPosition = mix(worldZero, mvPosition, amount)  ;",

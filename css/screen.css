@@ -151,13 +151,18 @@ label {
 	text-transform: uppercase;
 }
 
+.button a {
+	color: #999;
+}
+
 .enabled i {
 	color: #00C2DA;
 }
 
-.button:hover, .enabled:hover i {
+.button:hover, .button:hover a, .enabled:hover i {
 	background: #00C2DA;
 	color: #000;
+	text-decoration: none;
 }
 
 .button:active, .enabled:active i {
