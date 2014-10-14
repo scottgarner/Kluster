@@ -7,6 +7,8 @@ The inspiration to use k-means on image pixels came from a [post](http://0xfe.bl
 
 [View it live](http://kluster.j38.net/).
 
+This work is licensed under a [Creative Commons Attribution 3.0 Unported License](http://creativecommons.org/licenses/by/3.0/).
+
 Technologies
 ------------
 
