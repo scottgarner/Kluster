@@ -84,9 +84,13 @@ var klusterEvents = {
 			klusterGUI.hideControls();
 		});
 
-		$('.close').click(function( ){
+		$('.panel .close').click(function( ){
 			klusterGUI.hidePanels();
 		});
+
+		$('#banner .close').click(function( ){
+			klusterGUI.hideBanner();
+		});		
 
 		// Controls
 

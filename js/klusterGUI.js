@@ -174,6 +174,13 @@ var klusterGUI = {
 	hidePanels: function() {
 		$('.panel').fadeOut('fast');
 	},
+
+	hideBanner: function() {
+		$('#main').animate({'bottom': "0"}, 500, function() {
+			$('#main').css('borderBottom', "none");	
+		});
+	},
+	
 	showPanel: function(panelName) {
 
 		if ($("#" + panelName).is(":visible")) {
