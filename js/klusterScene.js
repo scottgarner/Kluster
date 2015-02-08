@@ -116,12 +116,12 @@ var klusterScene = {
 		
 		}	
 		
-		var coreMaterial = new THREE.ParticleBasicMaterial( { 
+		var coreMaterial = new THREE.PointCloudMaterial( { 
 			size: 2.0,map: klusterScene.starTexture , 
 			depthTest: false, depthWrite: false, blending: THREE.AdditiveBlending, 
 			transparent : true, vertexColors: true} );
 
-		var coreParticles = new THREE.ParticleSystem( coreGeometry, coreMaterial );
+		var coreParticles = new THREE.PointCloud( coreGeometry, coreMaterial );
 
 		klusterScene.universe.add(coreParticles);
 
@@ -225,7 +225,7 @@ var klusterScene = {
 
 			// cluster Mesh
 
-			var clusterMesh = new THREE.ParticleSystem( clusterGeometry, clusterMaterial );
+			var clusterMesh = new THREE.PointCloud( clusterGeometry, clusterMaterial );
 			clusterMesh.position.copy(centroidPosition);		
 
 			clusterMesh.startTime = klusterScene.clock.getElapsedTime() + (Math.random());	
