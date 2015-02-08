@@ -60,6 +60,13 @@ div#banner .fa-lg {
 	vertical-align:-5%;
 }
 
+div.alert {
+	display: none;
+}
+
+div.alert.visible {
+	display: initial;
+}
 
 #main {
 	position: fixed;
@@ -72,8 +79,8 @@ div#banner .fa-lg {
 }
 
 #main.banner {
-	bottom: 33px;
 	border-bottom: 1px solid #5E5E5E;
+	bottom: 33px;
 }
 
 
