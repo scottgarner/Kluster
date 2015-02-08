@@ -24,36 +24,8 @@ var klusterGUI = {
 		
 		// Banner
 
-		$.ajax({
-            type: 'GET',
-            url: 'http://www.scottmadethis.net/message/feed/',
-            dataType: 'xml',
-            success: function (xml) {
-                $(xml).find("content\\:encoded, encoded").each( function () {
-            		var alertP = $(this).text();
-            		var alertDiv = $("<div>").html($(alertP).html());
-            		alertDiv.addClass("alert");
-                	$('#banner').append(alertDiv);
-            	});
-            	
-            	setInterval( function() {
-            		var currentAlert = $('#banner').find(".alert.visible");		
-            		var nextAlert = currentAlert.next(".alert");            		          		
-            		if (nextAlert.length == 0) {
-            			nextAlert = $('#banner').find(".alert:first");
-            		}
-
-            		currentAlert.fadeOut("slow", function() {
-            			currentAlert.removeClass("visible");
-            			nextAlert.fadeIn("slow", function() {
-            				nextAlert.addClass("visible");
-            			});
-            		});
-
-            	}, 12000)
-                klusterGUI.showBanner();
-            }
-        });		
+		j38.loadAlerts();	
+		j38.rotateAlerts();	
 
 	},
 
@@ -210,10 +182,6 @@ var klusterGUI = {
 
 	hideBanner: function() {
 		$('#main').removeClass('banner', 1000);
-		klusterEvents.resize();
-	},
-	showBanner: function() {
-		$('#main').addClass('banner', 1000);
 		klusterEvents.resize();
 	},
 
