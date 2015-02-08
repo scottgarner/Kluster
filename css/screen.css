@@ -52,12 +52,12 @@ div#banner {
 	z-index: 10;
 }
 
-div#banner .fa {
-	color: #08d5e7;
+#banner i.fa {
+  vertical-align: -1px;
 }
 
-div#banner .fa-lg {
-	vertical-align:-5%;
+#banner i.fa-lg {
+  vertical-align: -5%;
 }
 
 div.alert {
