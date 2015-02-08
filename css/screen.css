@@ -56,15 +56,23 @@ div#banner .fa {
 	color: #08d5e7;
 }
 
+div#banner .fa-lg {
+	vertical-align:-5%;
+}
+
 
 #main {
 	position: fixed;
 	min-height: 640px;
 	width: 100%;
-	top: 0; left: 0; right: 0;
-	bottom: 33px;
+	top: 0; left: 0; right: 0; bottom: 0;
 	z-index: 20;
 	background: black;
+	overflow: hidden;
+}
+
+#main.banner {
+	bottom: 33px;
 	border-bottom: 1px solid #5E5E5E;
 }
 
