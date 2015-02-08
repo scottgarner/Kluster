@@ -52,11 +52,11 @@ div#banner {
 	z-index: 10;
 }
 
-#banner i.fa {
-  vertical-align: -1px;
+div.alert i.fa {
+  padding-right: 4px;
 }
 
-#banner i.fa-lg {
+div.alert i.fa-lg {
   vertical-align: -5%;
 }
 
