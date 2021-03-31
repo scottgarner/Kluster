@@ -24,7 +24,7 @@ var klusterGUI = {
 		
 		// Banner
 
-		if (j38) {
+		if (typeof j38 !== 'undefined') {
 			j38.loadAlerts();	
 			j38.rotateAlerts();	
 		}
