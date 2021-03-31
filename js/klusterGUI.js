@@ -24,8 +24,10 @@ var klusterGUI = {
 		
 		// Banner
 
-		j38.loadAlerts();	
-		j38.rotateAlerts();	
+		if (j38) {
+			j38.loadAlerts();	
+			j38.rotateAlerts();	
+		}
 
 	},
 
